@@ -514,7 +514,12 @@ function alerts() {
 }
 
 function stats(a) {
-  return `<div class="st">${a.map((x) => `<div><span>${x[0]}</span><b>${x[1]}</b></div>`).join("")}</div>`;
+  return `<div class="st">${a
+    .map(
+      (x) =>
+        `<div class="st-card"><span class="st-label">${x[0]}</span><b class="st-value">${x[1]}</b></div>`,
+    )
+    .join("")}</div>`;
 }
 function alertList(max) {
   const a = alerts().slice(0, max || 99);
@@ -604,7 +609,10 @@ function listPage(k) {
   return (
     head +
     `<div class="bar">
-      <input type="search" placeholder="Cari di ${e.t.toLowerCase()}..." value="${esc(Q[k] || "")}" oninput="Q['${k}']=this.value;render(true)" id="srch">
+      <div class="search-field">
+        <svg class="ico search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" placeholder="Cari di ${e.t.toLowerCase()}..." value="${esc(Q[k] || "")}" oninput="Q['${k}']=this.value;render(true)" id="srch">
+      </div>
       <span class="sp"></span>
       <button class="btn" onclick="csv('${k}')">
         <svg class="ico" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -636,10 +644,14 @@ function listPage(k) {
                 </tr>`,
             ).join("") ||
             `<tr>
-              <td colspan="99" class="empty">
-                <div style="font-size:32px;margin-bottom:8px">📂</div>
-                <b>${q ? "Tidak ada hasil pencarian" : "Belum ada data " + e.s.toLowerCase()}</b>
-                <div style="font-size:13px;color:var(--ink-muted);margin-top:4px">${q ? "Coba kata kunci pencarian lainnya." : 'Klik tombol "Tambah ' + e.s + '" di atas untuk mulai mencatat data baru.'}</div>
+              <td colspan="99">
+                <div class="empty-state-box">
+                  <div class="empty-state-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  </div>
+                  <div class="empty-state-title">${q ? "Tidak ada hasil pencarian" : "Belum ada catatan " + e.s.toLowerCase()}</div>
+                  <div class="empty-state-desc">${q ? "Coba gunakan kata kunci lain untuk mencari data." : 'Mulai pencatatan operasional dengan menekan tombol "Tambah ' + e.s + '" di atas.'}</div>
+                </div>
               </td>
             </tr>`
           }
@@ -1195,12 +1207,12 @@ window.openForm = (k, id, pre) => {
     d = document.getElementById("dlg");
   const ctx = r || pre || {};
   d.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--border-subtle);background:#fbfdf9">
-      <div style="display:flex;align-items:center;gap:10px">
-        <span style="display:inline-flex;padding:6px;background:var(--pri-light);color:var(--pri);border-radius:var(--r-xs)">${navIcon(k)}</span>
-        <h3 style="margin:0;padding:0;border:0;background:none;font-size:17px;font-weight:700">${r ? "Ubah" : "Tambah"} ${esc(e.s)}</h3>
+    <div class="modal-header-bar">
+      <div class="modal-header-left">
+        <div class="modal-header-icon">${navIcon(k)}</div>
+        <h3 class="modal-header-title">${r ? "Ubah" : "Tambah"} ${esc(e.s)}</h3>
       </div>
-      <button type="button" class="btn s" onclick="dlg.close()" style="border-radius:var(--r-full);padding:4px 10px;font-weight:700" title="Tutup">✕</button>
+      <button type="button" class="modal-close-btn" onclick="dlg.close()" title="Tutup">✕</button>
     </div>
     <form method="dialog" id="fm">
       ${e.f.map((f) => fld(f, r ? r[f[0]] : null, ctx)).join("")}
@@ -1613,26 +1625,40 @@ function render(keepFocus) {
   charts = [];
   const n = alerts().length;
   document.getElementById("side").innerHTML =
-    `<div class="brand-wrap">
-      <div class="brand-img">
-        <img src="img/logo.png" alt="Logo Satarya" class="brand-logo-img">
+    `<div class="brand-box">
+      <div class="brand-symbol">
+        <img src="img/logo.png" alt="Logo Satarya">
       </div>
-      <div class="brand-text">
-        <div class="brand">SATARYA</div>
-        <small>Sistem Operasional</small>
+      <div class="brand-meta">
+        <div class="brand-title">SATARYA</div>
+        <span class="brand-tag">ERP Mission Control</span>
       </div>
     </div>
-    <div class="nav-body">` +
+    <div class="nav-tree">` +
     NAV.map(
       ([g, items]) =>
-        `<div class="grp">${g}</div>` +
+        `<div class="nav-cat">${g}</div>` +
         items
           .map(
             ([k, l]) =>
-              `<button class="${k == cur || (cur == "pd" && k == "proj") || (cur == "kd" && k == "karyawan") ? "on" : ""}" onclick="go('${k}')">${navIcon(k)}<span>${l}</span>${k == "alert" && n ? `<span class="bd">${n}</span>` : ""}</button>`,
+              `<button class="nav-link ${k == cur || (cur == "pd" && k == "proj") || (cur == "kd" && k == "karyawan") ? "on" : ""}" onclick="go('${k}')">
+                ${navIcon(k)}
+                <span class="link-text">${l}</span>
+                ${k == "alert" && n ? `<span class="alert-badge">${n}</span>` : ""}
+              </button>`,
           )
           .join(""),
-    ).join("") + `</div>`;
+    ).join("") +
+    `</div>
+    <div class="nav-footer-box">
+      <div class="system-status-indicator">
+        <span class="system-status-dot"></span>
+        <span>Sistem Aktif & Terhubung</span>
+      </div>
+    </div>`;
+  const sectionCat = NAV.find(([, items]) => items.some(([k]) => k === cur))?.[0] || "OPERASIONAL PROYEK";
+  const badgeEl = document.getElementById("hdr_badge");
+  if (badgeEl) badgeEl.textContent = `SATARYA • ${sectionCat}`;
   document.getElementById("ttl").textContent = TITLE[cur] || E[cur].t;
   const tgl = new Date().toLocaleDateString("id-ID", {
     weekday: "long",
