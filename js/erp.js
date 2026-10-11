@@ -115,8 +115,8 @@ const E = {
       ["klien", "Nama klien"],
       ["alamat", "Alamat proyek"],
       ["kontak", "Kontak klien"],
-      ["sales", "Sales", "ref:sales"],
-      ["nilai", "Nilai proyek", "n"],
+      ["sales", "Sales (Opsional)", "ref:sales?"],
+      ["nilai", "Nilai kontrak (Rp)", "n"],
       ["mulai", "Tanggal mulai", "d"],
       ["status", "Status", ["Prospek", "Berjalan", "Tertunda", "Selesai"]],
     ],
@@ -479,18 +479,11 @@ try {
 }
 const normalize = () => {
   Object.keys(E).forEach((k) => (D[k] = Array.isArray(D[k]) ? D[k] : []));
-  D.log = Array.isArray(D.log) ? D.log : [];
+  D.log = (Array.isArray(D.log) ? D.log : []).filter((l) => l.k !== "auth" && l.a !== "Masuk" && l.a !== "Keluar");
 };
 normalize();
 
-let ME = { u: "admin", n: "Administrator", r: "owner" };
-try {
-  const sess = JSON.parse(localStorage.getItem(SESSION_KEY));
-  if (sess && ROLES[sess.r]) ME = sess;
-} catch (e) {}
-if (!ME || !ROLES[ME.r]) {
-  ME = { u: "admin", n: "Administrator", r: "owner" };
-}
+const ME = { u: "admin", n: "Administrator", r: "owner" };
 
 function today() {
   const d = new Date();
@@ -573,13 +566,7 @@ const greet = () => {
   return h < 11 ? "Selamat pagi" : h < 15 ? "Selamat siang" : h < 18 ? "Selamat sore" : "Selamat malam";
 };
 
-const can = (k) => {
-  if (!ME) return false;
-  const a = ROLES[ME.r].allow;
-  if (a === "*") return true;
-  if (k === "log") return false;
-  return a.includes(k);
-};
+const can = (k) => true; // RBAC dinonaktifkan: semua modul dapat diakses penuh
 
 /* Perhitungan bisnis (sama dengan versi sebelumnya) */
 const spent = (p) =>
@@ -803,12 +790,18 @@ function renderCalWidget() {
 
   return `
     <div class="cal-nav" data-dd id="top_cal_nav">
-      <button class="top-cal-btn" onclick="toggleDD(this.parentNode,event)" title="Sesuaikan Tanggal Operasional (Bisa pilih tanggal berapa saja)" aria-haspopup="true">
+      <button class="icon-btn top-cal-icon-btn" onclick="toggleDD(this.parentNode,event)" title="Kalender Operasional (${activeDateLabel})" aria-label="Kalender" aria-haspopup="true">
         ${I("cal")}
-        <span class="top-cal-txt">${activeDateLabel}</span>
-        ${I("chev", "caret")}
+        <span class="cal-badge-dot"></span>
       </button>
       <div class="cal-pop">
+        <div class="cal-pop-title">
+          <div>
+            <b>Kalender Operasional</b>
+            <small class="muted" style="display:block;margin-top:2px;font-weight:600">${activeDateLabel}</small>
+          </div>
+          <button type="button" class="icon-btn" onclick="toggleDD(this.closest('[data-dd]'),event)" aria-label="Tutup" style="margin-left:auto;width:28px;height:28px">${I("x")}</button>
+        </div>
         <div class="cal-pop-head">
           <span class="cal-pop-title">📅 ${monthName}</span>
           <div class="cal-nav-btns">
@@ -927,16 +920,14 @@ function renderTop() {
       <div class="user" data-dd>
         <button class="user-btn" onclick="toggleDD(this.parentNode,event)" aria-haspopup="true">
           <span class="avatar">${initials(ME.n)}</span>
-          <span class="user-txt"><b>${esc(ME.n)}</b><small>${ROLES[ME.r]?.n || "Super Admin"}</small></span>
+          <span class="user-txt"><b>${esc(ME.n)}</b><small>Administrator</small></span>
           ${I("chev", "caret")}
         </button>
         <div class="pop">
-          <div class="pop-head"><span class="avatar lg">${initials(ME.n)}</span><div><b>${esc(ME.n)}</b><span>@${esc(ME.u)} · ${ROLES[ME.r]?.n || "Super Admin"}</span></div></div>
+          <div class="pop-head"><span class="avatar lg">${initials(ME.n)}</span><div><b>${esc(ME.n)}</b><span>Administrator Workspace</span></div></div>
           <button class="pop-item" onclick="go('set')">${I("set")}Pengaturan & Data</button>
-          ${can("log") ? `<button class="pop-item" onclick="go('log')">${I("log")}Log Aktivitas</button>` : ""}
+          <button class="pop-item" onclick="go('log')">${I("log")}Log Aktivitas</button>
           <button class="pop-item" onclick="toggleTheme()">${I(dark ? "sun" : "moon")}${dark ? "Mode terang" : "Mode gelap"}</button>
-          <div class="pop-sep"></div>
-          <button class="pop-item" onclick="toast('Layar login dinonaktifkan sementara.');render()">${I("lock")}Mode Pengembang Aktif</button>
         </div>
       </div>
     </div>
@@ -985,7 +976,7 @@ window.openDrawer = () => {
       .join("")}</details>`;
   }).join("");
   dr.innerHTML = `<div class="drawer-panel" onclick="event.stopPropagation()">
-    <div class="drawer-h"><span class="avatar">${initials(ME.n)}</span><div><b>${esc(ME.n)}</b><small>${ROLES[ME.r].n}</small></div>
+    <div class="drawer-h"><span class="avatar">${initials(ME.n)}</span><div><b>${esc(ME.n)}</b><small>Administrator</small></div>
       <button class="icon-btn" onclick="closeDrawer()" aria-label="Tutup">${I("x")}</button></div>
     <div class="drawer-b">
       <button class="drawer-link" style="padding-left:12px;margin-bottom:6px;border:1px solid var(--line)" onclick="closeDrawer();openCmdk()">${I("search")}Cari apa saja…</button>
@@ -994,9 +985,8 @@ window.openDrawer = () => {
     </div>
     <div class="drawer-f">
       <button class="drawer-link" style="padding-left:12px" onclick="go('set')">${I("set")}Pengaturan & Data</button>
-      ${can("log") ? `<button class="drawer-link" style="padding-left:12px" onclick="go('log')">${I("log")}Log Aktivitas</button>` : ""}
+      <button class="drawer-link" style="padding-left:12px" onclick="go('log')">${I("log")}Log Aktivitas</button>
       <button class="drawer-link" style="padding-left:12px" onclick="toggleTheme()">${I("moon")}Ganti tema</button>
-      <button class="drawer-link" style="padding-left:12px;color:var(--bad)" onclick="logout()">${I("logout")}Keluar</button>
     </div></div>`;
   dr.onclick = closeDrawer;
   dr.classList.add("open");
@@ -1019,80 +1009,8 @@ window.toggleTheme = () => {
 };
 
 /* ---------------------------------------------------------------------
-   8. LOGIN
+   8. WORKSPACE LANGSUNG (Fitur login dinonaktifkan)
    --------------------------------------------------------------------- */
-function showLogin() {
-  $("#app").hidden = true;
-  const L = $("#login");
-  L.hidden = false;
-  L.innerHTML = `
-    <div class="login-art">
-      <div class="login-brand"><span class="brand-logo"><img src="img/logo.png" alt="Satarya"></span>
-        <div><b>SATARYA</b><span>Ocean Workspace ERP</span></div></div>
-      <div class="login-copy">
-        <h2>Kelola proyek, kas, stok & tim <em>dalam satu arus kerja.</em></h2>
-        <p>Workspace operasional kontraktor: dari penawaran proyek, penagihan invoice, kontrol anggaran, hingga penggajian — semuanya terhubung.</p>
-        <div class="login-feats"><span>Papan Kanban</span><span>Invoice & Piutang</span><span>Laba-Rugi</span><span>Vendor</span><span>Akses per Role</span><span>Mode Gelap</span></div>
-      </div>
-      <div class="login-foot">© ${new Date().getFullYear()} Satarya · Data tersimpan di perangkat ini</div>
-      ${WAVES}
-    </div>
-    <div class="login-panel">
-      <form class="login-card" id="loginForm" autocomplete="on">
-        <h1>Masuk ke workspace</h1>
-        <p>Gunakan akun sesuai peran Anda di perusahaan.</p>
-        <div class="login-err" id="lerr"></div>
-        <label class="field">Nama pengguna<input name="u" autocomplete="username" placeholder="mis. owner" required></label>
-        <label class="field">Kata sandi
-          <div class="pw-wrap"><input name="p" type="password" autocomplete="current-password" placeholder="••••••••" required>
-          <button type="button" class="icon-btn" onclick="const i=this.previousElementSibling;i.type=i.type==='password'?'text':'password'" aria-label="Tampilkan sandi">${I("eye")}</button></div>
-        </label>
-        <button class="btn btn-primary" type="submit">${I("lock")}Masuk</button>
-        <div class="demo"><div class="demo-t">Akun demo — klik untuk mengisi otomatis</div>
-          <div class="demo-grid">${USERS.map(
-            (u) => `<button type="button" class="demo-acc" onclick="fillLogin('${u.u}','${u.p}')"><b>${ROLES[u.r].n}</b><span>${u.u} / ${u.p}</span></button>`,
-          ).join("")}</div>
-        </div>
-      </form>
-    </div>`;
-  $("#loginForm").onsubmit = (ev) => {
-    ev.preventDefault();
-    const fd = new FormData(ev.target);
-    const u = USERS.find((x) => x.u === String(fd.get("u")).trim().toLowerCase() && x.p === fd.get("p"));
-    if (!u) {
-      const e = $("#lerr");
-      e.textContent = "Nama pengguna atau kata sandi salah.";
-      e.classList.add("on");
-      return;
-    }
-    ME = { u: u.u, n: u.n, r: u.r };
-    try {
-      localStorage.setItem(SESSION_KEY, JSON.stringify(ME));
-    } catch (e) {}
-    logAct("Masuk", "auth", "Masuk ke sistem");
-    save();
-    S.page = "dash";
-    render();
-    toast(`${greet()}, ${u.n.split(" ")[0]}!`);
-  };
-}
-window.fillLogin = (u, p) => {
-  const f = $("#loginForm");
-  f.u.value = u;
-  f.p.value = p;
-  f.querySelector("button[type=submit]").focus();
-};
-window.logout = async () => {
-  closeDrawer();
-  if (!(await ask("Keluar dari akun?", "Anda perlu masuk kembali untuk mengakses workspace.", "Ya, keluar"))) return;
-  logAct("Keluar", "auth", "Keluar dari sistem");
-  save();
-  ME = null;
-  try {
-    localStorage.removeItem(SESSION_KEY);
-  } catch (e) {}
-  render();
-};
 
 /* Header halaman */
 function head(title, desc, actions, crumbs) {
@@ -1359,12 +1277,13 @@ function kanban() {
     return `
       <div class="kcol" ondragover="kDragOver(event)" ondragleave="kDragLeave(event)" ondrop="kDrop(event, '${st}')">
         <div class="kcol-h">
-          <span class="dot" style="background:${st === "Berjalan" ? "var(--teal-500)" : st === "Selesai" ? "var(--ok)" : st === "Tertunda" ? "var(--warn)" : "var(--ocean-400)"}"></span>
+          <span class="dot" style="background:${st === "Berjalan" ? "var(--primary)" : st === "Selesai" ? "var(--ok)" : st === "Tertunda" ? "var(--warn)" : "var(--lemon-600)"}"></span>
           <b>${st}</b>
           <span class="badge plain">${items.length}</span>
         </div>
         <div class="kcol-sum">${rp(totalVal)}</div>
         <div class="kcards">${cards || '<div class="empty" style="padding:14px;background:var(--surface);border-radius:10px">Kosong</div>'}</div>
+        <button type="button" class="kcol-add-btn" onclick="openForm('proj', null, { status: '${st}' })">${I("plus")}Tambah Proyek (${st})</button>
       </div>`;
   }).join("");
 
@@ -2683,8 +2602,7 @@ function settings() {
       <div class="card-h"><div><h3>Akun & Sesi Aktif</h3><p>Informasi kredensial pengguna yang sedang digunakan.</p></div></div>
       <div class="card-b">
         <div class="set-row">
-          <div><b>${esc(ME.n)}</b><p>Nama Pengguna: @${esc(ME.u)} · Peran: <b>${ROLES[ME.r].n}</b></p></div>
-          <button class="btn btn-danger" onclick="logout()">${I("logout")}Keluar Akun</button>
+          <div><b>${esc(ME.n)}</b><p>Akun Utama Operasional · Hak Akses Penuh ke Seluruh Sistem</p></div>
         </div>
       </div>
     </div>
@@ -2718,46 +2636,29 @@ function settings() {
           <button class="btn btn-danger" onclick="resetAll()">${I("trash")}Hapus Semua Data</button>
         </div>
       </div>
-    </div>
-
-    <div class="card" style="margin-top:20px">
-      <div class="card-h"><div><h3>Struktur Hak Akses Peran (RBAC)</h3><p>Pembagian izin modul operasional di perusahaan.</p></div></div>
-      <div class="card-b">
-        <div class="role-grid">
-          ${Object.entries(ROLES)
-            .map(
-              ([rk, rd]) => `
-            <div class="role-card">
-              <b>${rd.n} ${rk === ME.r ? '<span class="badge teal plain">Akun Anda</span>' : ""}</b>
-              <span>${rd.d}</span>
-            </div>`,
-            )
-            .join("")}
-        </div>
-      </div>
     </div>`
   );
 }
 
 function logPage() {
-  if (!can("log")) return '<div class="empty">Anda tidak memiliki hak akses untuk melihat audit log.</div>';
+  const logs = (D.log || []).filter((l) => l.k !== "auth" && l.a !== "Masuk" && l.a !== "Keluar");
 
   return (
     head("Log Aktivitas & Jejak Audit", pageDesc("log"), `<button class="btn" onclick="D.log=[];save();render()">${I("trash")}Bersihkan Log</button>`) +
     `<div class="card">
-      <div class="card-h"><div><h3>Catatan Perubahan Data (${(D.log || []).length} entri)</h3><p>Setiap penambahan, pengubahan, dan penghapusan data otomatis tercatat di sini.</p></div></div>
+      <div class="card-h"><div><h3>Catatan Perubahan Data (${logs.length} entri)</h3><p>Setiap penambahan, pengubahan, dan penghapusan data otomatis tercatat di sini.</p></div></div>
       <div class="card-b">
         <div class="tbl-wrap">
           <table class="tbl">
-            <thead><tr><th>Waktu</th><th>Pengguna</th><th>Tindakan</th><th>Modul</th><th>Keterangan</th></tr></thead>
+            <thead><tr><th>Waktu</th><th>Pelaksana</th><th>Tindakan</th><th>Modul</th><th>Keterangan</th></tr></thead>
             <tbody>
               ${
-                (D.log || [])
+                logs
                   .map(
                     (l) => `
                   <tr>
                     <td>${fmtD(l.t)} <small class="muted">${new Date(l.t).toLocaleTimeString("id-ID")}</small></td>
-                    <td><b>${esc(l.u)}</b> <span class="badge plain">${esc(ROLES[l.r]?.n || l.r)}</span></td>
+                    <td><b>${esc(l.u || "Administrator")}</b></td>
                     <td><span class="badge ${l.a === "Hapus" ? "bad" : l.a === "Tambah" ? "ok" : "info"} plain">${esc(l.a)}</span></td>
                     <td>${esc(E[l.k]?.s || l.k)}</td>
                     <td>${esc(l.l)}</td>
@@ -2791,7 +2692,7 @@ function fld(f, v, pre) {
     i = `
       <div class="ref">
         <select name="${k}" id="sel_${k}" ${opt ? "" : "required"}>
-          ${opt ? '<option value="">Tidak ada</option>' : D[r].length ? `<option value="">-- Pilih ${E[r].s} --</option>` : `<option value="">${emptyMsg}</option>`}
+          ${opt ? '<option value="">-- Tidak ada (Opsional) --</option>' : D[r].length ? `<option value="">-- Pilih ${E[r].s} --</option>` : `<option value="">${emptyMsg}</option>`}
           ${D[r].map((x) => `<option value="${x.id}" ${x.id == val ? "selected" : ""}>${esc(x.nama || x.no || x.item)}</option>`).join("")}
         </select>
         <button type="button" class="btn btn-sm" onclick="quickAddRef('${r}','sel_${k}')" title="Tambah ${esc(E[r].s)} baru secara langsung">+ ${esc(E[r].s)}</button>
@@ -2807,9 +2708,9 @@ function fld(f, v, pre) {
       <input type="hidden" name="${k}_name" value="${esc((pre && pre.pdf_name) || "")}">
     `;
   } else if (t === "txt") {
-    i = `<textarea name="${k}" placeholder="Tuliskan catatan...">${esc(val)}</textarea>`;
+    i = `<textarea name="${k}" placeholder="Tuliskan ${l.toLowerCase()}...">${esc(val)}</textarea>`;
   } else if (t === "n" || t === "q") {
-    i = `<input type="number" step="any" min="0" name="${k}" value="${esc(val)}" required>`;
+    i = `<input type="number" step="any" min="0" name="${k}" value="${esc(val)}" placeholder="${t === 'n' ? 'mis. 50000000' : '1'}" required>`;
   } else if (t === "d") {
     i = `<input type="date" name="${k}" value="${esc(val || today())}" required>`;
   } else if (t === "m") {
@@ -2817,10 +2718,10 @@ function fld(f, v, pre) {
   } else {
     // Default invoice number auto-generator
     const defVal = k === "no" && !val ? nextInvNo() : val;
-    i = `<input name="${k}" value="${esc(defVal)}" ${k === "ket" || k === "kontak" || k === "link" || k === "alamat" || k === "pic" ? "" : "required"}>`;
+    i = `<input name="${k}" value="${esc(defVal)}" placeholder="Masukkan ${l.toLowerCase()}..." ${k === "ket" || k === "kontak" || k === "link" || k === "alamat" || k === "pic" ? "" : "required"}>`;
   }
 
-  return `<label class="${isFull ? "full" : ""}">${l}${i}</label>`;
+  return `<label class="${isFull ? "full" : ""}"><span>${l}</span>${i}</label>`;
 }
 
 window.openForm = (k, id, pre) => {
@@ -2828,14 +2729,19 @@ window.openForm = (k, id, pre) => {
   if (!e) return;
   const r = id ? (D[k] || []).find((x) => x.id == id) : null;
   const d = $("#dlg");
+  if (!d) return;
   const ctx = r || pre || {};
+
+  d.onclick = (ev) => {
+    if (ev.target === d) d.close();
+  };
 
   d.innerHTML = `
     <div class="sheet-h">
       <span class="mega-ico">${I(k)}</span>
       <div>
         <h3>${r ? "Ubah" : "Tambah"} ${esc(e.s)}</h3>
-        <p>${r ? "Perbarui informasi yang tersimpan." : "Lengkapi kolom berikut untuk menyimpan data baru."}</p>
+        <p>${r ? "Perbarui informasi yang tersimpan di sistem." : "Lengkapi kolom berikut untuk menyimpan data baru."}</p>
       </div>
       <button type="button" class="icon-btn" onclick="dlg.close()" aria-label="Tutup">${I("x")}</button>
     </div>
@@ -2851,7 +2757,8 @@ window.openForm = (k, id, pre) => {
 
   d.showModal();
 
-  const formEl = $("#fm");
+  const formEl = d.querySelector("#fm") || $("#fm");
+  if (!formEl) return;
   formEl.onsubmit = async (ev) => {
     ev.preventDefault();
     const o = r || { id: Date.now() };
@@ -3413,13 +3320,10 @@ function render(keepFocus) {
   charts.forEach((c) => c.destroy());
   charts = [];
 
-  if (!ME) {
-    showLogin();
-    return;
-  }
-
-  $("#login").hidden = true;
-  $("#app").hidden = false;
+  const appEl = $("#app");
+  if (appEl) appEl.hidden = false;
+  const loginEl = $("#login");
+  if (loginEl) loginEl.hidden = true;
 
   renderTop();
   renderTabbar();

@@ -26,11 +26,8 @@
     <link rel="stylesheet" href="css/erp.css" />
   </head>
   <body>
-    <!-- LAYAR LOGIN (role-based) -->
-    <section id="login" class="login" hidden></section>
-
-    <!-- APLIKASI -->
-    <div id="app" class="app" hidden>
+    <!-- APLIKASI UTAMA -->
+    <div id="app" class="app">
       <!-- Top navigation horizontal -->
       <header id="top" class="top"></header>
 
