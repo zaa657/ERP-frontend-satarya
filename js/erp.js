@@ -1013,7 +1013,6 @@ function dash() {
           <button class="btn btn-lemon" onclick="openForm('proj')">${I("plus")}Proyek Baru</button>
           <button class="btn btn-glass" onclick="openForm('keu',null,{tipe:'keluar'})">${I("outflow")}Catat Pengeluaran</button>
           <button class="btn btn-glass" onclick="openForm('invoice')">${I("invoice")}Buat Invoice</button>
-          <button class="btn btn-glass" onclick="openCmdk()">${I("search")}Perintah Cepat</button>
         </div>
       </div>
       <div class="hero-balance">
