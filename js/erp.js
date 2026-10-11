@@ -433,43 +433,11 @@ const pageGroup = (k) => {
   return NAV.find((g) => g.page === k || (g.items || []).some((i) => i[0] === k));
 };
 
-const ROLES = {
-  owner: { n: "Direktur / Owner", d: "Akses penuh ke seluruh modul & log aktivitas.", allow: "*" },
-  finance: {
-    n: "Keuangan",
-    d: "Kas, invoice, laporan, anggaran proyek & penggajian.",
-    allow: ["dash", "alert", "proj", "pd", "kanban", "rab", "budget", "biaya", "keu", "invoice", "lap", "pl", "vendor", "gaji", "kasbon", "gantirugi", "set"],
-  },
-  logistik: {
-    n: "Logistik",
-    d: "Peralatan, kerusakan, stok, mutasi, permintaan & vendor.",
-    allow: ["dash", "alert", "proj", "pd", "alat", "rusak", "supply", "mov", "form", "vendor", "set"],
-  },
-  hrd: {
-    n: "HRD",
-    d: "Karyawan, absensi, penggajian, kasbon & ganti rugi.",
-    allow: ["dash", "alert", "karyawan", "kd", "absen", "gaji", "kasbon", "gantirugi", "set"],
-  },
-  sales: {
-    n: "Sales",
-    d: "Proyek, kanban, dokumentasi, invoice & kinerja sales.",
-    allow: ["dash", "alert", "proj", "pd", "kanban", "dok", "invoice", "sales", "set"],
-  },
-};
-// Akun demo (simulasi login di sisi browser — bukan pengganti autentikasi server)
-const USERS = [
-  { u: "owner", p: "owner123", n: "Budi Santoso", r: "owner" },
-  { u: "finance", p: "finance123", n: "Sari Wulandari", r: "finance" },
-  { u: "logistik", p: "logistik123", n: "Andi Pratama", r: "logistik" },
-  { u: "hrd", p: "hrd123", n: "Rina Kartika", r: "hrd" },
-  { u: "sales", p: "sales123", n: "Dimas Saputra", r: "sales" },
-];
-
+const ROLES = {};
 /* ---------------------------------------------------------------------
    4. DATA & STATE
    --------------------------------------------------------------------- */
 const KEY = "mgmt_internal_v2"; // sama dengan versi lama → data lama tetap terbaca
-const SESSION_KEY = "satarya_session";
 const THEME_KEY = "satarya_theme";
 let D;
 try {
@@ -480,10 +448,13 @@ try {
 const normalize = () => {
   Object.keys(E).forEach((k) => (D[k] = Array.isArray(D[k]) ? D[k] : []));
   D.log = (Array.isArray(D.log) ? D.log : []).filter((l) => l.k !== "auth" && l.a !== "Masuk" && l.a !== "Keluar");
+  try {
+    localStorage.removeItem("satarya_session");
+  } catch (e) {}
 };
 normalize();
 
-const ME = { u: "admin", n: "Administrator", r: "owner" };
+const ME = { u: "admin", n: "Satarya ERP", r: "owner" };
 
 function today() {
   const d = new Date();
@@ -917,19 +888,7 @@ function renderTop() {
       ${renderCalWidget()}
       <button class="icon-btn" onclick="toggleTheme()" title="${dark ? "Mode terang" : "Mode gelap"}" aria-label="Ganti tema">${I(dark ? "sun" : "moon")}</button>
       <button class="icon-btn" onclick="go('alert')" title="${n} peringatan" aria-label="${n} peringatan">${I("alert")}${n ? `<span class="cnt">${n > 99 ? "99+" : n}</span>` : ""}</button>
-      <div class="user" data-dd>
-        <button class="user-btn" onclick="toggleDD(this.parentNode,event)" aria-haspopup="true">
-          <span class="avatar">${initials(ME.n)}</span>
-          <span class="user-txt"><b>${esc(ME.n)}</b><small>Administrator</small></span>
-          ${I("chev", "caret")}
-        </button>
-        <div class="pop">
-          <div class="pop-head"><span class="avatar lg">${initials(ME.n)}</span><div><b>${esc(ME.n)}</b><span>Administrator Workspace</span></div></div>
-          <button class="pop-item" onclick="go('set')">${I("set")}Pengaturan & Data</button>
-          <button class="pop-item" onclick="go('log')">${I("log")}Log Aktivitas</button>
-          <button class="pop-item" onclick="toggleTheme()">${I(dark ? "sun" : "moon")}${dark ? "Mode terang" : "Mode gelap"}</button>
-        </div>
-      </div>
+      <button class="icon-btn" onclick="go('set')" title="Pengaturan & Cadangan Data" aria-label="Pengaturan">${I("set")}</button>
     </div>
   </div>`;
 }
@@ -976,8 +935,11 @@ window.openDrawer = () => {
       .join("")}</details>`;
   }).join("");
   dr.innerHTML = `<div class="drawer-panel" onclick="event.stopPropagation()">
-    <div class="drawer-h"><span class="avatar">${initials(ME.n)}</span><div><b>${esc(ME.n)}</b><small>Administrator</small></div>
-      <button class="icon-btn" onclick="closeDrawer()" aria-label="Tutup">${I("x")}</button></div>
+    <div class="drawer-h">
+      <span class="brand-logo" style="width:34px;height:34px"><img src="img/logo.png" alt="Satarya"></span>
+      <div><b>SATARYA ERP</b><small style="color:var(--lemon-400);font-weight:700">Sistem Operasional</small></div>
+      <button class="icon-btn" onclick="closeDrawer()" aria-label="Tutup">${I("x")}</button>
+    </div>
     <div class="drawer-b">
       <button class="drawer-link" style="padding-left:12px;margin-bottom:6px;border:1px solid var(--line)" onclick="closeDrawer();openCmdk()">${I("search")}Cari apa saja…</button>
       ${groups}
@@ -1045,12 +1007,12 @@ function dash() {
     `<div class="hero">
       <div>
         <span class="hero-date">${I("cal")}${tglStr}</span>
-        <h2>${greet()}, ${esc(ME.n.split(" ")[0])}!</h2>
+        <h2>${greet()}! Selamat Datang di Satarya ERP</h2>
         <p>Sistem operasional aktif. Pantau perputaran kas, proyek lapangan, dan inventaris secara terpadu.</p>
         <div class="hero-actions">
-          ${can("proj") ? `<button class="btn btn-white" onclick="openForm('proj')">${I("plus")}Proyek Baru</button>` : ""}
-          ${can("keu") ? `<button class="btn btn-glass" onclick="openForm('keu',null,{tipe:'keluar'})">${I("outflow")}Catat Pengeluaran</button>` : ""}
-          ${can("invoice") ? `<button class="btn btn-glass" onclick="openForm('invoice')">${I("invoice")}Buat Invoice</button>` : ""}
+          <button class="btn btn-lemon" onclick="openForm('proj')">${I("plus")}Proyek Baru</button>
+          <button class="btn btn-glass" onclick="openForm('keu',null,{tipe:'keluar'})">${I("outflow")}Catat Pengeluaran</button>
+          <button class="btn btn-glass" onclick="openForm('invoice')">${I("invoice")}Buat Invoice</button>
           <button class="btn btn-glass" onclick="openCmdk()">${I("search")}Perintah Cepat</button>
         </div>
       </div>
@@ -2016,7 +1978,7 @@ function projDetail() {
             <span>${I("cal")} Mulai: <b>${fmtD(p.mulai)}</b></span>
           </div>
         </div>
-        <div class="ring" style="--p:${pc};--ring-c:${pc > 100 ? "var(--bad)" : "var(--teal-500)"}">
+        <div class="ring" style="--p:${pc};--ring-c:${pc > 100 ? "var(--bad)" : "var(--primary)"}">
           <div><b>${pc}%</b><small>Anggaran</small></div>
         </div>
       </div>
@@ -2599,15 +2561,6 @@ function settings() {
   return (
     head("Pengaturan & Data", pageDesc("set")) +
     `<div class="card">
-      <div class="card-h"><div><h3>Akun & Sesi Aktif</h3><p>Informasi kredensial pengguna yang sedang digunakan.</p></div></div>
-      <div class="card-b">
-        <div class="set-row">
-          <div><b>${esc(ME.n)}</b><p>Akun Utama Operasional · Hak Akses Penuh ke Seluruh Sistem</p></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-top:20px">
       <div class="card-h"><div><h3>Tampilan & Antarmuka</h3><p>Sesuaikan kenyamanan visual sesuai kondisi pencahayaan Anda.</p></div></div>
       <div class="card-b">
         <div class="set-row">
@@ -3297,15 +3250,6 @@ function charting() {
    21. ROUTER & RENDER UTAMA
    --------------------------------------------------------------------- */
 window.go = (pageKey, id) => {
-  if (!ME) {
-    showLogin();
-    return;
-  }
-  if (!can(pageKey)) {
-    toast("Anda tidak memiliki izin untuk modul ini.", "bad");
-    return;
-  }
-
   S.page = pageKey;
   S.id = id != null ? id : null;
 
