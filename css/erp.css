@@ -1,97 +1,90 @@
 /* ==========================================================================
-   SATARYA ERP NEXT-GEN DESIGN SYSTEM (100% REBUILT FROM SCRATCH)
-   Reference: Modern Construction Mission Control & Industrial FinTech ERP
-   Strict Brand Identity Palette:
-     - Primary: Forest Leaf Green (#255A1A / #2D6B20)
-     - Accent: Lemon Yellow (#FFE81F / #F5DC00)
-     - Canvas & Surface: Clean Studio White (#FFFFFF & #F6F8F3)
+   SATARYA ERP - FIGMA "COMMUNITY ERP" ARCHITECTURE ADAPTATION
+   Figma Template: https://www.figma.com/design/OhDC3RXEluuL8SZDHKbLKO/ERP--Community-
+   
+   Color Rule: 100% PRESERVE Satarya Brand Identity
+     - Deep Forest Green (#1B4310 / #255A1A)
+     - Lemon Yellow (#FFE81F / #FAD000)
+     - Clean Crisp Canvas & Panels (#FFFFFF / #F4F7F1)
    ========================================================================== */
 
 :root {
-  /* Surface Layers */
-  --app-bg: #f5f8f2;
-  --panel-bg: #ffffff;
-  --subtle-bg: #edf3e7;
-  --elevated-bg: #ffffff;
-  --active-bg: #e6f0de;
-
-  /* Typography Inks */
-  --ink-heading: #0f1d0b;
-  --ink-body: #25361e;
-  --ink-muted: #5e7354;
-  --ink-subtle: #8da183;
-  --ink-on-dark: #edf6e8;
+  /* Surfaces inspired by Figma layout structure */
+  --bg-app: #f4f7f0;
+  --bg-panel: #ffffff;
+  --bg-subtle: #edf3e6;
+  --bg-card-glass: rgba(255, 255, 255, 0.95);
+  
+  /* Inks & Contrast */
+  --ink-heading: #12210d;
+  --ink-body: #24351d;
+  --ink-muted: #5d7053;
+  --ink-subtle: #899c80;
+  --ink-light: #f1f8ed;
 
   /* Borders & Dividers */
   --border-light: #e5edd9;
-  --border-base: #d6e3c9;
-  --border-strong: #b2c9a1;
+  --border-base: #d5e2c8;
+  --border-focus: #2d6b20;
 
-  /* Brand Greens */
-  --pri: #2b671d;
-  --pri-hover: #225316;
-  --pri-dark: #193e10;
-  --pri-light: #eaf4e5;
-  --pri-glow: rgba(43, 103, 29, 0.22);
+  /* Brand Palette Greens */
+  --pri: #2d6b20;
+  --pri-hover: #225417;
+  --pri-dark: #173b0f;
+  --pri-light: #ebf5e6;
+  --pri-glow: rgba(45, 107, 32, 0.25);
 
-  /* Sidebar Dark Theme */
-  --sidebar-bg: #15380d;
-  --sidebar-end: #0e2709;
-  --sidebar-border: rgba(255, 255, 255, 0.07);
-  --sidebar-hover: rgba(255, 255, 255, 0.08);
-  --sidebar-active: rgba(255, 232, 31, 0.16);
+  /* Figma Sidebar Custom Theme (Dark Green) */
+  --side-bg: #194010;
+  --side-bg-end: #102d09;
+  --side-hover: rgba(255, 255, 255, 0.08);
+  --side-active: #ffffff;
+  --side-active-text: #194010;
 
-  /* Brand Lemon Yellows */
+  /* Brand Lemon Yellows (Highlights, Badges, Graphs) */
   --acc: #ffe81f;
   --acc-hover: #ffec3d;
-  --acc-deep: #c4a700;
-  --acc-soft: #fffde0;
+  --acc-deep: #cca700;
+  --acc-soft: #fffde6;
   --acc-glow: rgba(255, 232, 31, 0.35);
 
   /* Status Tokens */
-  --status-ok: #236c16;
-  --status-ok-bg: #e9f5e4;
-  --status-ok-border: #bce0b2;
+  --ok: #236c16;
+  --ok-bg: #eaf6e5;
+  --ok-border: #bce0b2;
 
-  --status-warn: #856a00;
-  --status-warn-bg: #fdfad9;
-  --status-warn-border: #faec93;
+  --warn: #856a00;
+  --warn-bg: #fdfad9;
+  --warn-border: #faec93;
 
-  --status-bad: #c72e1d;
-  --status-bad-bg: #fdf0ee;
-  --status-bad-border: #f8c1b9;
+  --bad: #c72e1d;
+  --bad-bg: #fdf0ee;
+  --bad-border: #f8c1b9;
 
-  /* Modern Precision Geometry */
-  --r-xs: 6px;
+  /* Figma Geometric Corner Radii */
   --r-sm: 8px;
-  --r: 12px;
-  --r-lg: 18px;
-  --r-xl: 24px;
+  --r: 14px;
+  --r-lg: 20px;
+  --r-xl: 26px;
   --r-pill: 9999px;
 
-  /* Layer Shadows */
-  --shadow-1: 0 1px 3px rgba(15, 29, 11, 0.04), 0 1px 2px rgba(15, 29, 11, 0.02);
-  --shadow-2: 0 4px 12px rgba(15, 29, 11, 0.05), 0 1px 3px rgba(15, 29, 11, 0.03);
-  --shadow-3: 0 12px 28px rgba(15, 29, 11, 0.08), 0 3px 8px rgba(15, 29, 11, 0.04);
-  --shadow-4: 0 20px 48px rgba(15, 29, 11, 0.12), 0 6px 16px rgba(15, 29, 11, 0.06);
+  /* Soft Ambient Elevations */
+  --shadow-sm: 0 2px 6px rgba(18, 33, 13, 0.04);
+  --shadow-md: 0 6px 18px rgba(18, 33, 13, 0.06), 0 1px 3px rgba(18, 33, 13, 0.02);
+  --shadow-lg: 0 16px 38px rgba(18, 33, 13, 0.08), 0 4px 12px rgba(18, 33, 13, 0.03);
+  --shadow-card: 0 4px 14px rgba(18, 33, 13, 0.05);
 
-  /* Fluid Motion */
+  /* Fluid Transitions */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --duration-fast: 0.15s;
-  --duration-normal: 0.25s;
 }
 
-/* ==========================================================================
-   RESET & FOUNDATION
-   ========================================================================== */
-*, *::before, *::after {
+* {
   box-sizing: border-box;
 }
 
 html {
   scroll-padding-top: env(safe-area-inset-top, 0px);
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -100,25 +93,25 @@ body {
   font-size: 14px;
   line-height: 1.55;
   color: var(--ink-body);
-  background-color: var(--app-bg);
+  background-color: var(--bg-app);
   display: flex;
   min-height: 100vh;
-  overflow-x: hidden;
 }
 
-.num, td.n, th.n, .st b, .dash-kpi-val {
+.num, td.n, th.n, .st b {
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
 }
 
 /* ==========================================================================
-   SIDEBAR COMPONENT (INDUSTRIAL MISSION CONTROL)
+   FIGMA DISTINCTIVE SIDEBAR:
+   Floating rounded pill active item with inverse curve aesthetics
    ========================================================================== */
 aside.side-panel {
-  width: 275px;
-  background: linear-gradient(180deg, var(--sidebar-bg) 0%, var(--sidebar-end) 100%);
-  color: var(--ink-on-dark);
-  padding: 24px 14px 28px;
+  width: 270px;
+  background: linear-gradient(180deg, var(--side-bg) 0%, var(--side-bg-end) 100%);
+  color: var(--ink-light);
+  padding: 24px 16px 28px;
   position: sticky;
   top: 0;
   height: 100vh;
@@ -127,32 +120,32 @@ aside.side-panel {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  box-shadow: 4px 0 24px rgba(10, 26, 6, 0.16);
+  box-shadow: 4px 0 24px rgba(12, 31, 8, 0.15);
   z-index: 50;
-  transition: transform var(--duration-normal) var(--ease);
+  transition: transform 0.28s var(--ease);
 }
 
 aside.side-panel::-webkit-scrollbar {
   width: 4px;
 }
 aside.side-panel::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.16);
   border-radius: var(--r-pill);
 }
 
-/* Brand Identity Header */
+/* Brand Box */
 .brand-box {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 8px 10px 18px;
-  border-bottom: 1px solid var(--sidebar-border);
-  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 12px;
 }
 
 .brand-symbol {
-  width: 46px;
-  height: 46px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -188,12 +181,12 @@ aside.side-panel::-webkit-scrollbar-thumb {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 2px 6px;
-  border-radius: var(--r-xs);
+  padding: 2px 7px;
+  border-radius: var(--r-pill);
   margin-top: 4px;
 }
 
-/* Nav Groups & Links */
+/* Nav Section Categories */
 .nav-tree {
   flex: 1;
   display: flex;
@@ -203,12 +196,13 @@ aside.side-panel::-webkit-scrollbar-thumb {
 .nav-cat {
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: rgba(215, 237, 201, 0.5);
-  padding: 16px 12px 6px;
+  color: rgba(220, 240, 210, 0.5);
+  padding: 16px 14px 6px;
 }
 
+/* Figma Pill-Style Navigation Link */
 aside button.nav-link {
   display: flex;
   align-items: center;
@@ -216,30 +210,36 @@ aside button.nav-link {
   width: 100%;
   background: transparent;
   border: 0;
-  color: #dbead2;
+  color: #d8ead0;
   text-align: left;
-  padding: 10px 14px;
+  padding: 11px 16px;
   margin-bottom: 3px;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-pill);
   cursor: pointer;
   font: inherit;
   font-size: 13.5px;
   font-weight: 600;
   position: relative;
-  transition: var(--transition);
+  transition: all 0.2s var(--ease);
 }
 
 aside button.nav-link:hover {
-  background: var(--sidebar-hover);
+  background: var(--side-hover);
   color: #ffffff;
   transform: translateX(3px);
 }
 
+/* FIGMA SIGNATURE ACTIVE ITEM: Cutout pill with contrast indicator */
 aside button.nav-link.on {
-  background: var(--sidebar-active);
-  color: #ffffff;
+  background: #ffffff;
+  color: var(--side-bg);
   font-weight: 700;
-  box-shadow: inset 4px 0 0 var(--acc);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+aside button.nav-link.on .ico {
+  stroke: var(--pri);
+  opacity: 1;
 }
 
 aside button.nav-link .ico {
@@ -248,13 +248,6 @@ aside button.nav-link .ico {
   stroke-width: 2;
   opacity: 0.85;
   flex-shrink: 0;
-  transition: opacity var(--duration-fast);
-}
-
-aside button.nav-link:hover .ico,
-aside button.nav-link.on .ico {
-  opacity: 1;
-  stroke: var(--acc);
 }
 
 aside button.nav-link span.link-text {
@@ -269,27 +262,27 @@ aside button.nav-link .alert-badge {
   color: #1a2707;
   font-size: 11px;
   font-weight: 800;
-  padding: 1px 7px;
+  padding: 2px 8px;
   border-radius: var(--r-pill);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Sidebar Footer User Box */
+/* Sidebar Footer (Figma bottom quick badge) */
 .nav-footer-box {
   margin-top: auto;
-  padding-top: 16px;
-  border-top: 1px solid var(--sidebar-border);
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .system-status-indicator {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: var(--r-sm);
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--r-pill);
   font-size: 12px;
-  color: #bcd4b2;
+  font-weight: 600;
+  color: #c9e0be;
 }
 
 .system-status-dot {
@@ -298,16 +291,10 @@ aside button.nav-link .alert-badge {
   background: var(--acc);
   border-radius: var(--r-pill);
   box-shadow: 0 0 8px var(--acc);
-  animation: pulse 2s infinite ease-in-out;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.85); }
 }
 
 /* ==========================================================================
-   APP CANVAS & HEADER
+   APP HEADER
    ========================================================================== */
 .wrap {
   flex: 1;
@@ -321,16 +308,16 @@ header.app-header {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding: 16px 40px;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  padding: 18px 40px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border-light);
   position: sticky;
   top: 0;
   z-index: 40;
-  padding-top: calc(16px + env(safe-area-inset-top, 0px));
-  box-shadow: var(--shadow-1);
+  padding-top: calc(18px + env(safe-area-inset-top, 0px));
+  box-shadow: var(--shadow-sm);
 }
 
 .header-left {
@@ -346,7 +333,7 @@ header.app-header {
 }
 
 .header-badge {
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 800;
   letter-spacing: 0.08em;
   color: var(--pri);
@@ -360,7 +347,6 @@ header.app-header h1 {
   font-weight: 800;
   color: var(--ink-heading);
   letter-spacing: -0.02em;
-  line-height: 1.2;
 }
 
 .header-right {
@@ -375,17 +361,11 @@ header.app-header h1 {
   gap: 8px;
   background: var(--subtle-bg);
   border: 1px solid var(--border-light);
-  padding: 8px 16px;
+  padding: 8px 18px;
   border-radius: var(--r-pill);
   font-size: 13px;
   font-weight: 600;
   color: var(--ink-muted);
-}
-
-.header-pill .ico {
-  width: 16px;
-  height: 16px;
-  stroke: var(--pri);
 }
 
 .header-btn {
@@ -396,19 +376,19 @@ header.app-header h1 {
   border: 1px solid var(--border-base);
   background: #ffffff;
   color: var(--ink-heading);
-  padding: 9px 16px;
+  padding: 9px 18px;
   border-radius: var(--r-pill);
   cursor: pointer;
   font: inherit;
   font-size: 13px;
-  font-weight: 600;
-  box-shadow: var(--shadow-1);
-  transition: var(--transition);
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s var(--ease);
 }
 
 .header-btn:hover {
   background: var(--subtle-bg);
-  border-color: var(--border-strong);
+  border-color: var(--pri);
   transform: translateY(-1px);
 }
 
@@ -434,7 +414,7 @@ header.app-header h1 {
   padding: 0 5px;
   border-radius: var(--r-pill);
   border: 2px solid #ffffff;
-  background: var(--status-bad);
+  background: var(--bad);
   color: #ffffff;
   font-size: 11px;
   font-weight: 800;
@@ -447,7 +427,7 @@ header.app-header h1 {
 }
 
 /* ==========================================================================
-   MAIN VIEWPORT WORKSPACE
+   MAIN VIEWPORT
    ========================================================================== */
 main.main-viewport {
   padding: 32px 40px 72px;
@@ -457,7 +437,61 @@ main.main-viewport {
 }
 
 /* ==========================================================================
-   COMMAND TOOLBAR (SEARCH, ACTIONS, FILTERS)
+   FIGMA STATS HERO CARDS (ASSET / REVENUE / EXPENSE)
+   ========================================================================== */
+.st {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.st-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--r-lg);
+  padding: 22px 26px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s var(--ease);
+}
+
+.st-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-base);
+}
+
+/* Figma card accent top line (Leaf green to Lemon yellow) */
+.st-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--pri) 0%, var(--acc) 100%);
+}
+
+.st-card span.st-label {
+  color: var(--ink-muted);
+  font-size: 13px;
+  font-weight: 600;
+  display: block;
+}
+
+.st-card b.st-value {
+  font-family: "Cabinet Grotesk", "Plus Jakarta Sans", sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--ink-heading);
+  margin-top: 8px;
+  display: block;
+}
+
+/* ==========================================================================
+   FIGMA TOOLBAR & SEARCH
    ========================================================================== */
 .bar {
   display: flex;
@@ -478,26 +512,26 @@ main.main-viewport {
 
 .search-field input[type="search"] {
   width: 100%;
-  padding: 10px 16px 10px 42px;
+  padding: 11px 18px 11px 44px;
   border-radius: var(--r-pill);
-  border: 1px solid var(--border-base);
+  border: 1.5px solid var(--border-base);
   background: #ffffff;
   font: inherit;
   font-size: 13.5px;
   color: var(--ink-heading);
-  box-shadow: var(--shadow-1);
-  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s var(--ease);
 }
 
 .search-field input[type="search"]:focus {
   border-color: var(--pri);
   outline: none;
-  box-shadow: 0 0 0 3px var(--pri-glow), var(--shadow-1);
+  box-shadow: 0 0 0 3.5px var(--pri-glow);
 }
 
 .search-field .search-ico {
   position: absolute;
-  left: 14px;
+  left: 16px;
   top: 50%;
   transform: translateY(-50%);
   width: 18px;
@@ -506,7 +540,7 @@ main.main-viewport {
   pointer-events: none;
 }
 
-/* Standard Buttons System */
+/* Figma Pill Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -515,160 +549,74 @@ main.main-viewport {
   border: 1px solid var(--border-base);
   background: #ffffff;
   color: var(--ink-heading);
-  padding: 10px 20px;
+  padding: 10px 22px;
   border-radius: var(--r-pill);
   cursor: pointer;
   font: inherit;
   font-size: 13.5px;
   font-weight: 700;
-  box-shadow: var(--shadow-1);
-  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s var(--ease);
   white-space: nowrap;
 }
 
 .btn:hover {
-  border-color: var(--border-strong);
+  border-color: var(--pri);
   background: #fbfdf9;
   transform: translateY(-1.5px);
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--shadow-md);
 }
 
 .btn:active {
   transform: translateY(0);
 }
 
-/* Primary Action Button (Brand Lemon Accented) */
 .btn.p {
   background: linear-gradient(180deg, #327521 0%, var(--pri) 100%);
   border-color: var(--pri);
   color: #ffffff;
-  box-shadow: 0 4px 14px var(--pri-glow), var(--shadow-1);
+  box-shadow: 0 4px 14px var(--pri-glow), var(--shadow-sm);
 }
 
 .btn.p:hover {
   background: linear-gradient(180deg, var(--pri) 0%, var(--pri-hover) 100%);
   border-color: var(--pri-hover);
-  box-shadow: 0 6px 18px var(--pri-glow), var(--shadow-2);
+  box-shadow: 0 6px 18px var(--pri-glow), var(--shadow-md);
 }
 
 .btn.s {
-  padding: 6px 14px;
+  padding: 6px 15px;
   font-size: 12.5px;
   border-radius: var(--r-pill);
 }
 
 .btn.x {
-  color: var(--status-bad);
-  border-color: var(--status-bad-border);
-  background: var(--status-bad-bg);
+  color: var(--bad);
+  border-color: var(--bad-border);
+  background: var(--bad-bg);
 }
 
 .btn.x:hover {
-  background: var(--status-bad);
-  border-color: var(--status-bad);
+  background: var(--bad);
+  border-color: var(--bad);
   color: #ffffff;
 }
 
-/* Relation Quick Add Button */
-.ref-wrap {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  width: 100%;
-}
-
-.ref-wrap select {
-  flex: 1;
-}
-
-.ref-btn {
-  white-space: nowrap;
-  padding: 10px 16px;
-  background: var(--acc-soft);
-  border: 1px solid #ebd95f;
-  color: #3b5c15;
-  font-weight: 700;
-  cursor: pointer;
-  border-radius: var(--r-sm);
-  transition: var(--transition);
-}
-
-.ref-btn:hover {
-  background: var(--acc);
-  color: #17201d;
-  box-shadow: 0 3px 10px var(--acc-glow);
-}
-
 /* ==========================================================================
-   METRIC MISSION-CONTROL CARDS (ENTERPRISE STATS)
-   ========================================================================== */
-.st {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
-  gap: 16px;
-  margin-bottom: 28px;
-}
-
-.st-card {
-  background: #ffffff;
-  border: 1px solid var(--border-base);
-  border-radius: var(--r-lg);
-  padding: 22px 24px;
-  box-shadow: var(--shadow-2);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
-  transition: var(--transition);
-}
-
-.st-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-3);
-  border-color: var(--border-strong);
-}
-
-.st-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--pri) 0%, var(--acc) 100%);
-}
-
-.st-card span.st-label {
-  color: var(--ink-muted);
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: capitalize;
-}
-
-.st-card b.st-value {
-  font-family: "Cabinet Grotesk", "Plus Jakarta Sans", sans-serif;
-  font-size: 26px;
-  font-weight: 800;
-  color: var(--ink-heading);
-  margin-top: 8px;
-  line-height: 1.2;
-}
-
-/* ==========================================================================
-   DATA PANELS & CARDS
+   PANELS & FIGMA MODERN DATA TABLES
    ========================================================================== */
 .panel {
   background: #ffffff;
-  border: 1px solid var(--border-base);
+  border: 1px solid var(--border-light);
   border-radius: var(--r-lg);
   margin-bottom: 26px;
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--shadow-card);
   overflow: hidden;
-  transition: var(--transition);
+  transition: all 0.2s var(--ease);
 }
 
 .panel:hover {
-  box-shadow: var(--shadow-3);
+  box-shadow: var(--shadow-md);
 }
 
 .panel > h3 {
@@ -683,14 +631,12 @@ main.main-viewport {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  letter-spacing: -0.01em;
 }
 
 .pb {
   padding: 24px 28px;
 }
 
-/* 2-Column Responsive Dashboard */
 .g2 {
   display: grid;
   gap: 24px;
@@ -701,9 +647,7 @@ main.main-viewport {
   margin: 0;
 }
 
-/* ==========================================================================
-   TABLE SYSTEM (PRECISION FINTECH & OPERATIONS)
-   ========================================================================== */
+/* Figma Table Precision Styling */
 .tw {
   overflow-x: auto;
 }
@@ -729,60 +673,23 @@ th {
 
 td {
   padding: 16px 24px;
-  border-bottom: 1px solid #eef4e8;
+  border-bottom: 1px solid #edf4e7;
   vertical-align: middle;
   font-size: 13.5px;
   color: var(--ink-body);
-  transition: background var(--duration-fast);
+  transition: background 0.15s ease;
 }
 
 tr:hover td {
-  background: #f8fbf5;
+  background: #f7fbf3;
 }
 
 tr:last-child td {
   border-bottom: 0;
 }
 
-/* Empty State Illustration */
-.empty-state-box {
-  padding: 56px 24px;
-  text-align: center;
-}
-
-.empty-state-icon {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 16px;
-  background: var(--subtle-bg);
-  border-radius: var(--r-pill);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--pri);
-}
-
-.empty-state-icon svg {
-  width: 32px;
-  height: 32px;
-}
-
-.empty-state-title {
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--ink-heading);
-  margin-bottom: 6px;
-}
-
-.empty-state-desc {
-  font-size: 13px;
-  color: var(--ink-muted);
-  max-width: 420px;
-  margin: 0 auto;
-}
-
 /* ==========================================================================
-   PILLS, STATUS BADGES & METERS
+   BADGES & CHIPS
    ========================================================================== */
 .badge {
   display: inline-flex;
@@ -797,31 +704,31 @@ tr:last-child td {
 }
 
 .badge.ok {
-  background: var(--status-ok-bg);
-  color: var(--status-ok);
-  border: 1px solid var(--status-ok-border);
+  background: var(--ok-bg);
+  color: var(--ok);
+  border: 1px solid var(--ok-border);
 }
 
 .badge.bad {
-  background: var(--status-bad-bg);
-  color: var(--status-bad);
-  border: 1px solid var(--status-bad-border);
+  background: var(--bad-bg);
+  color: var(--bad);
+  border: 1px solid var(--bad-border);
 }
 
 .badge.warn {
-  background: var(--status-warn-bg);
-  color: var(--status-warn);
-  border: 1px solid var(--status-warn-border);
+  background: var(--warn-bg);
+  color: var(--warn);
+  border: 1px solid var(--warn-border);
 }
 
-/* Operation Alert Cards */
+/* Alert Notification List in Dashboard */
 .al {
   display: flex;
   gap: 16px;
   padding: 16px 28px;
   border-bottom: 1px solid #edf4e7;
   align-items: flex-start;
-  transition: var(--transition);
+  transition: all 0.15s ease;
 }
 
 .al:hover {
@@ -833,8 +740,8 @@ tr:last-child td {
 }
 
 .al i {
-  width: 11px;
-  height: 11px;
+  width: 10px;
+  height: 10px;
   border-radius: var(--r-pill);
   margin-top: 6px;
   flex-shrink: 0;
@@ -843,11 +750,11 @@ tr:last-child td {
 }
 
 .al.b i {
-  background: var(--status-bad);
+  background: var(--bad);
   box-shadow: 0 0 0 3px rgba(199, 46, 29, 0.28);
 }
 
-/* Dynamic Meters */
+/* Progress Meter */
 .meter {
   height: 10px;
   background: #e3ede0;
@@ -860,7 +767,7 @@ tr:last-child td {
   display: block;
   height: 100%;
   border-radius: var(--r-pill);
-  background: linear-gradient(90deg, #2b671d 0%, #4da22f 100%);
+  background: linear-gradient(90deg, #2d6b20 0%, #4da22f 100%);
   transition: width 0.4s var(--ease);
 }
 
@@ -869,12 +776,12 @@ tr:last-child td {
 }
 
 .pos {
-  color: var(--status-ok);
+  color: var(--ok);
   font-weight: 700;
 }
 
 .neg {
-  color: var(--status-bad);
+  color: var(--bad);
   font-weight: 700;
 }
 
@@ -883,7 +790,7 @@ a.lk {
   font-weight: 700;
   cursor: pointer;
   text-decoration: none;
-  transition: var(--transition);
+  transition: all 0.15s ease;
 }
 
 a.lk:hover {
@@ -891,27 +798,27 @@ a.lk:hover {
   text-decoration: underline;
 }
 
-/* Filter Period Tabs */
+/* Figma Filter Tabs */
 .tabs {
   display: inline-flex;
-  border: 1px solid var(--border-base);
+  border: 1.5px solid var(--border-base);
   border-radius: var(--r-pill);
   padding: 4px;
   background: #ffffff;
-  box-shadow: var(--shadow-1);
+  box-shadow: var(--shadow-sm);
 }
 
 .tabs button {
   border: 0;
   background: transparent;
-  padding: 7px 18px;
+  padding: 8px 20px;
   border-radius: var(--r-pill);
   cursor: pointer;
   font: inherit;
   font-size: 13px;
   font-weight: 700;
   color: var(--ink-muted);
-  transition: var(--transition);
+  transition: all 0.2s var(--ease);
 }
 
 .tabs button:hover {
@@ -924,7 +831,7 @@ a.lk:hover {
 }
 
 /* ==========================================================================
-   INPUTS & MODAL DIALOG
+   FORM INPUTS & MODAL DIALOG
    ========================================================================== */
 input, select, textarea {
   font: inherit;
@@ -935,7 +842,7 @@ input, select, textarea {
   border-radius: var(--r-sm);
   padding: 10px 14px;
   width: 100%;
-  transition: var(--transition);
+  transition: all 0.15s ease;
 }
 
 input:focus, select:focus, textarea:focus {
@@ -958,13 +865,13 @@ dialog.app-dialog {
   border-radius: var(--r-xl);
   padding: 0;
   width: min(640px, 94vw);
-  box-shadow: var(--shadow-4);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
   background: #ffffff;
   overflow: hidden;
 }
 
 dialog.app-dialog::backdrop {
-  background: rgba(14, 33, 9, 0.65);
+  background: rgba(16, 36, 11, 0.65);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
@@ -973,7 +880,7 @@ dialog.app-dialog::backdrop {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 28px;
+  padding: 22px 30px;
   background: linear-gradient(180deg, #ffffff 0%, #fafcf8 100%);
   border-bottom: 1px solid var(--border-light);
 }
@@ -985,11 +892,11 @@ dialog.app-dialog::backdrop {
 }
 
 .modal-header-icon {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   background: var(--pri-light);
   color: var(--pri);
-  border-radius: var(--r-sm);
+  border-radius: var(--r-pill);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1003,8 +910,8 @@ dialog.app-dialog::backdrop {
 }
 
 .modal-close-btn {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: var(--r-pill);
   border: 1px solid var(--border-base);
   background: #ffffff;
@@ -1014,17 +921,17 @@ dialog.app-dialog::backdrop {
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  transition: var(--transition);
+  transition: all 0.15s ease;
 }
 
 .modal-close-btn:hover {
-  background: var(--status-bad-bg);
-  color: var(--status-bad);
-  border-color: var(--status-bad-border);
+  background: var(--bad-bg);
+  color: var(--bad);
+  border-color: var(--bad-border);
 }
 
 dialog.app-dialog form {
-  padding: 28px;
+  padding: 30px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 18px;
@@ -1043,7 +950,7 @@ dialog.app-dialog .full {
 }
 
 /* ==========================================================================
-   TOAST NOTIFICATION (BOTTOM FLOATING)
+   TOAST
    ========================================================================== */
 #toast.app-toast {
   position: fixed;
@@ -1052,7 +959,7 @@ dialog.app-dialog .full {
   transform: translateX(-50%) translateY(20px);
   background: #14350c;
   color: #ffffff;
-  padding: 14px 26px;
+  padding: 14px 28px;
   border-radius: var(--r-pill);
   font-size: 13.5px;
   font-weight: 700;
@@ -1061,7 +968,7 @@ dialog.app-dialog .full {
   pointer-events: none;
   transition: all 0.28s var(--ease);
   z-index: 100;
-  border: 1px solid rgba(255, 232, 31, 0.25);
+  border: 1px solid rgba(255, 232, 31, 0.3);
 }
 
 #toast.app-toast.on {
@@ -1069,7 +976,7 @@ dialog.app-dialog .full {
   transform: translateX(-50%) translateY(0);
 }
 
-/* Chart Canvas Sizing */
+/* Charts */
 canvas {
   max-height: 290px;
   width: 100% !important;
@@ -1082,7 +989,7 @@ canvas {
 }
 
 /* ==========================================================================
-   MOBILE & TABLET RESPONSIVENESS (100% COMPATIBLE)
+   MOBILE RESPONSIVENESS
    ========================================================================== */
 @media (max-width: 960px) {
   aside.side-panel {
