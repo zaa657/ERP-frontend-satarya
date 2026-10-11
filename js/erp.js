@@ -533,29 +533,78 @@ function alertList(max) {
     : '<div class="empty">Tidak ada peringatan. Semua indikator dalam batas aman.</div>';
 }
 
+function figmaCalendar() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const monthName = now.toLocaleDateString("id-ID", { month: "long", year: "numeric" });
+  const firstDay = new Date(year, month, 1).getDay(); // 0 is Sun
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const todayDate = now.getDate();
+  
+  const dayNames = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+  let cells = dayNames.map((d) => `<div class="figma-cal-day-name">${d}</div>`).join("");
+  
+  // Empty cells before first day
+  for (let i = 0; i < firstDay; i++) {
+    cells += `<div class="figma-cal-cell" style="opacity:0.3">-</div>`;
+  }
+  // Days of month
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = d === todayDate;
+    cells += `<div class="figma-cal-cell ${isToday ? "active today" : ""}" onclick="toast('Jadwal ' + ${d} + ' ${monthName}')">${d}</div>`;
+  }
+  
+  return `
+    <div class="figma-cal-card">
+      <div class="figma-cal-header">
+        <span class="figma-cal-title">📅 Kalender Operasional - ${monthName}</span>
+        <div class="figma-cal-nav">
+          <button type="button" onclick="toast('Bulan ini: ${monthName}')">●</button>
+        </div>
+      </div>
+      <div class="figma-cal-grid">${cells}</div>
+    </div>`;
+}
+
 function dash() {
   const run = D.proj.filter((p) => p.status == "Berjalan");
   const lowSupply = (D.supply || []).filter((i) => stok(i) <= (+i.minStok || 0)).length;
   const rusakPending = (D.rusak || []).filter((r) => r.status === "Dilaporkan" || r.status === "Sedang Diperbaiki").length;
   return (
     stats([
-      ["Saldo kas", rp(kas())],
+      ["Saldo kas operasional", rp(kas())],
       ["Proyek berjalan", run.length],
-      ["Nilai proyek berjalan", rp(sum(run, (p) => p.nilai))],
+      ["Nilai kontrak aktif", rp(sum(run, (p) => p.nilai))],
       ["Perlengkapan menipis", lowSupply],
-      ["Peralatan rusak aktif", rusakPending],
+      ["Peralatan perbaikan", rusakPending],
       ["Peringatan aktif", alerts().length],
     ]) +
-    `<div class="g2"><div class="panel"><h3>Arus kas 6 bulan terakhir</h3><div class="pb"><canvas id="c1"></canvas></div></div>
-  <div class="panel"><h3>Kesehatan anggaran proyek</h3><div class="pb">${
-    D.proj.length
-? D.proj
-    .slice(-5)
-    .map((p) => budgetBar(p))
-    .join("")
-: '<div class="empty">Tambahkan proyek untuk melihat kondisi anggaran.</div>'
-  }</div></div></div>
-  <div class="g2" style="margin-top:18px"><div class="panel"><h3>Peringatan terbaru</h3>${alertList(5)}</div><div class="panel"><h3>Status proyek</h3><div class="pb"><canvas id="c2"></canvas></div></div></div>`
+    `<div class="dash-main-grid">
+      <div class="panel">
+        <h3>Arus Kas 6 Bulan Terakhir</h3>
+        <div class="pb"><canvas id="c1"></canvas></div>
+      </div>
+      ${figmaCalendar()}
+    </div>
+    <div class="g2">
+      <div class="panel">
+        <h3>Kesehatan Anggaran Proyek</h3>
+        <div class="pb">${
+          D.proj.length
+            ? D.proj.slice(-5).map((p) => budgetBar(p)).join("")
+            : '<div class="empty">Tambahkan proyek untuk melihat kondisi anggaran.</div>'
+        }</div>
+      </div>
+      <div class="panel">
+        <h3>Status & Komposisi Proyek</h3>
+        <div class="pb"><canvas id="c2"></canvas></div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:24px">
+      <h3>Peringatan & Isu Lapangan Terbaru</h3>
+      ${alertList(5)}
+    </div>`
   );
 }
 function budgetBar(p) {
@@ -1673,7 +1722,7 @@ function render(keepFocus) {
   const bell = document.getElementById("bell");
   const bellTxt = n ? n + " peringatan" : "Tidak ada peringatan";
   bell.innerHTML =
-    `<span class="bt">${bellTxt}</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>` +
+    `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>` +
     (n ? `<span class="cnt">${n > 99 ? "99+" : n}</span>` : "");
   bell.title = bellTxt;
   bell.setAttribute("aria-label", bellTxt);
