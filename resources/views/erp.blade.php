@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sistem Manajemen Operasional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Fraunces:opsz,wght@9..144,600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="{{ asset('css/erp.css') }}" />
+  </head>
+  <body>
+    <aside id="side"></aside>
+    <div id="scrim" onclick="document.getElementById('side').classList.remove('open')"></div>
+    <div class="wrap">
+      <header>
+        <button
+          class="btn ib"
+          id="burger"
+          aria-label="Buka menu"
+          onclick="document.getElementById('side').classList.toggle('open')"
+        >
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+        <h1 id="ttl"></h1>
+        <span class="dt" id="dt"></span
+        ><button class="btn ib" id="cal" type="button" onclick="showDate()">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
+        </button
+        ><button class="btn" onclick="go('alert')" id="bell"></button>
+      </header>
+      <main id="main"></main>
+    </div>
+    <dialog id="dlg"></dialog>
+    <div id="toast"></div>
+    <script src="{{ asset('js/erp.js') }}"></script>
+  </body>
+</html>

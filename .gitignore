@@ -1,0 +1,52 @@
+# Secrets & Environment variables (SANGAT BAHAYA JIKA DI-PUSH)
+.env
+.env.*
+!.env.example
+
+# Credentials & Keys
+/auth.json
+*.pem
+*.key
+*.cert
+
+# Dependencies & Build artifacts (Ukuran sangat besar, tidak boleh di-push)
+/node_modules
+/vendor
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database files (Jangan sampai data lokal ter-upload)
+*.sqlite
+*.sqlite3
+*.db
+/database/*.sqlite
+
+# Logs & Temporary Cache
+*.log
+/storage/logs/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/pail
+.phpunit.result.cache
+/.phpunit.cache
+
+# IDE & OS files
+.DS_Store
+Thumbs.db
+/.vscode
+/.idea
+/.cursor
+/.claude
+/.nova
+/.zed
+.phpactor.json
+_ide_helper.php
+Homestead.json
+Homestead.yaml
+
+# Public generated files
+/public/hot
+/public/storage
+/public/build
