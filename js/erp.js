@@ -483,17 +483,18 @@ const normalize = () => {
 };
 normalize();
 
-let ME = null;
+let ME = { u: "admin", n: "Administrator", r: "owner" };
 try {
-  ME = JSON.parse(localStorage.getItem(SESSION_KEY));
-  if (ME && !ROLES[ME.r]) ME = null;
-} catch (e) {
-  ME = null;
-}
+  const sess = JSON.parse(localStorage.getItem(SESSION_KEY));
+  if (sess && ROLES[sess.r]) ME = sess;
+} catch (e) {}
 
 const S = {
   page: "dash",
   id: null,
+  activeDate: today(),
+  calViewYear: new Date().getFullYear(),
+  calViewMonth: new Date().getMonth(),
   tab: {},
   q: {},
   sort: {},
@@ -759,6 +760,133 @@ const alertList = (max) => {
 const isOn = (k) => S.page === k || (S.page === "pd" && k === "proj") || (S.page === "kd" && k === "karyawan");
 const groupItems = (g) => (g.items || []).filter((i) => can(i[0]));
 
+function renderCalWidget() {
+  const activeDate = S.activeDate || today();
+  const dObj = new Date(activeDate);
+  const activeDateLabel = isNaN(dObj)
+    ? activeDate
+    : dObj.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+
+  const viewYear = S.calViewYear;
+  const viewMonth = S.calViewMonth;
+  const monthName = new Date(viewYear, viewMonth, 1).toLocaleDateString("id-ID", { month: "long", year: "numeric" });
+
+  const firstDay = (new Date(viewYear, viewMonth, 1).getDay() + 6) % 7; // 0=Mon, 6=Sun
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const daysInPrevMonth = new Date(viewYear, viewMonth, 0).getDate();
+
+  const dayHeaders = ["Sn", "Sl", "Rb", "Km", "Jm", "Sb", "Mn"]
+    .map((h) => `<div class="cal-day-h">${h}</div>`)
+    .join("");
+
+  let cells = "";
+  // Hari bulan sebelumnya
+  for (let i = firstDay - 1; i >= 0; i--) {
+    const dNum = daysInPrevMonth - i;
+    cells += `<div class="cal-cell-btn other-m">${dNum}</div>`;
+  }
+
+  const todayStr = today();
+  for (let d = 1; d <= daysInMonth; d++) {
+    const mm = String(viewMonth + 1).padStart(2, "0");
+    const dd = String(d).padStart(2, "0");
+    const cellDateStr = `${viewYear}-${mm}-${dd}`;
+    const isToday = cellDateStr === todayStr;
+    const isSelected = cellDateStr === activeDate;
+
+    cells += `<button type="button" class="cal-cell-btn ${isToday ? "today" : ""} ${isSelected ? "selected" : ""}" onclick="pickNavDate('${cellDateStr}',event)">${d}</button>`;
+  }
+
+  return `
+    <div class="cal-nav" data-dd id="top_cal_nav">
+      <button class="top-cal-btn" onclick="toggleDD(this.parentNode,event)" title="Sesuaikan Tanggal Operasional (Bisa pilih tanggal berapa saja)" aria-haspopup="true">
+        ${I("cal")}
+        <span class="top-cal-txt">${activeDateLabel}</span>
+        ${I("chev", "caret")}
+      </button>
+      <div class="cal-pop">
+        <div class="cal-pop-head">
+          <span class="cal-pop-title">📅 ${monthName}</span>
+          <div class="cal-nav-btns">
+            <button type="button" class="cal-arrow-btn" onclick="navCalMonth(-1,event)" title="Bulan Sebelumnya">${I("chevL")}</button>
+            <button type="button" class="cal-arrow-btn" onclick="navCalMonth(1,event)" title="Bulan Berikutnya">${I("chevR")}</button>
+          </div>
+        </div>
+
+        <div class="cal-direct-input">
+          <label>Pilih Bebas:</label>
+          <input type="date" value="${activeDate}" onchange="pickNavDate(this.value,event)">
+        </div>
+
+        <div class="cal-presets">
+          <button type="button" class="cal-preset-btn ${activeDate === todayStr ? "active" : ""}" onclick="quickCalPreset('today',event)">Hari Ini</button>
+          <button type="button" class="cal-preset-btn" onclick="quickCalPreset('yesterday',event)">Kemarin</button>
+          <button type="button" class="cal-preset-btn" onclick="quickCalPreset('monthStart',event)">Awal Bulan</button>
+        </div>
+
+        <div class="cal-grid-d">
+          ${dayHeaders}
+          ${cells}
+        </div>
+
+        <div class="cal-pop-foot">
+          <span>Aktif: <b>${activeDateLabel}</b></span>
+          <button type="button" class="link" onclick="quickCalPreset('today',event)">Ke Hari Ini</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+window.pickNavDate = (dateStr, ev) => {
+  if (ev) ev.stopPropagation();
+  if (!dateStr) return;
+  S.activeDate = dateStr;
+  const d = new Date(dateStr);
+  if (!isNaN(d)) {
+    S.calViewYear = d.getFullYear();
+    S.calViewMonth = d.getMonth();
+  }
+  const formatted = fmtD(dateStr);
+  toast(`Tanggal operasional aktif: ${formatted}`);
+  renderTop();
+};
+
+window.navCalMonth = (delta, ev) => {
+  if (ev) ev.stopPropagation();
+  let m = S.calViewMonth + delta;
+  let y = S.calViewYear;
+  if (m < 0) {
+    m = 11;
+    y--;
+  } else if (m > 11) {
+    m = 0;
+    y++;
+  }
+  S.calViewMonth = m;
+  S.calViewYear = y;
+  const navEl = document.getElementById("top_cal_nav");
+  const wasOpen = navEl && navEl.classList.contains("open");
+  renderTop();
+  if (wasOpen) {
+    const newNav = document.getElementById("top_cal_nav");
+    if (newNav) newNav.classList.add("open");
+  }
+};
+
+window.quickCalPreset = (preset, ev) => {
+  if (ev) ev.stopPropagation();
+  const now = new Date();
+  let target = today();
+  if (preset === "yesterday") {
+    now.setDate(now.getDate() - 1);
+    target = now.toISOString().slice(0, 10);
+  } else if (preset === "monthStart") {
+    const ym = S.activeDate ? S.activeDate.slice(0, 7) : today().slice(0, 7);
+    target = ym + "-01";
+  }
+  pickNavDate(target, ev);
+};
+
 function renderTop() {
   const n = alerts().length;
   const dark = document.documentElement.getAttribute("data-theme") === "dark";
@@ -784,26 +912,27 @@ function renderTop() {
     <button class="icon-btn burger" onclick="openDrawer()" aria-label="Buka menu">${I("menu")}</button>
     <button class="brand" onclick="go('dash')" aria-label="Beranda">
       <span class="brand-logo"><img src="img/logo.png" alt="Satarya"></span>
-      <span><span class="brand-name">SATARYA</span><span class="brand-sub">Ocean Workspace</span></span>
+      <span><span class="brand-name">SATARYA</span><span class="brand-sub">Sistem Operasional</span></span>
     </button>
     <nav class="nav" aria-label="Navigasi utama">${navHtml}</nav>
     <div class="top-actions">
       <button class="search-trigger" onclick="openCmdk()">${I("search")}<span>Cari apa saja…</span><kbd>Ctrl K</kbd></button>
+      ${renderCalWidget()}
       <button class="icon-btn" onclick="toggleTheme()" title="${dark ? "Mode terang" : "Mode gelap"}" aria-label="Ganti tema">${I(dark ? "sun" : "moon")}</button>
       <button class="icon-btn" onclick="go('alert')" title="${n} peringatan" aria-label="${n} peringatan">${I("alert")}${n ? `<span class="cnt">${n > 99 ? "99+" : n}</span>` : ""}</button>
       <div class="user" data-dd>
         <button class="user-btn" onclick="toggleDD(this.parentNode,event)" aria-haspopup="true">
           <span class="avatar">${initials(ME.n)}</span>
-          <span class="user-txt"><b>${esc(ME.n)}</b><small>${ROLES[ME.r].n}</small></span>
+          <span class="user-txt"><b>${esc(ME.n)}</b><small>${ROLES[ME.r]?.n || "Super Admin"}</small></span>
           ${I("chev", "caret")}
         </button>
         <div class="pop">
-          <div class="pop-head"><span class="avatar lg">${initials(ME.n)}</span><div><b>${esc(ME.n)}</b><span>@${esc(ME.u)} · ${ROLES[ME.r].n}</span></div></div>
+          <div class="pop-head"><span class="avatar lg">${initials(ME.n)}</span><div><b>${esc(ME.n)}</b><span>@${esc(ME.u)} · ${ROLES[ME.r]?.n || "Super Admin"}</span></div></div>
           <button class="pop-item" onclick="go('set')">${I("set")}Pengaturan & Data</button>
           ${can("log") ? `<button class="pop-item" onclick="go('log')">${I("log")}Log Aktivitas</button>` : ""}
           <button class="pop-item" onclick="toggleTheme()">${I(dark ? "sun" : "moon")}${dark ? "Mode terang" : "Mode gelap"}</button>
           <div class="pop-sep"></div>
-          <button class="pop-item danger" onclick="logout()">${I("logout")}Keluar</button>
+          <button class="pop-item" onclick="toast('Layar login dinonaktifkan sementara.');render()">${I("lock")}Mode Pengembang Aktif</button>
         </div>
       </div>
     </div>
@@ -3036,12 +3165,12 @@ document.addEventListener("keydown", (e) => {
 const getThemeColors = () => {
   const dark = document.documentElement.getAttribute("data-theme") === "dark";
   return {
-    primary: dark ? "#3D8EE6" : "#0B5CAD",
-    accent: dark ? "#2DD4BF" : "#0E9F9A",
-    text: dark ? "#BCCADB" : "#33475C",
-    grid: dark ? "rgba(255,255,255,0.06)" : "#E2E9F2",
-    warn: dark ? "#FBBF24" : "#C98303",
-    bad: dark ? "#F87171" : "#D64545",
+    primary: dark ? "#4ADE80" : "#2E7D1B",
+    accent: dark ? "#FFE81F" : "#FFE81F",
+    text: dark ? "#C5D8BF" : "#344830",
+    grid: dark ? "rgba(255,255,255,0.06)" : "#DFEAD8",
+    warn: "#FFE81F",
+    bad: "#D64545",
   };
 };
 
@@ -3092,8 +3221,8 @@ function charting() {
           data: {
             labels: ms.map(fmtM),
             datasets: [
-              { label: "Pemasukan", data: ms.map((m) => mSum(m, "masuk")), backgroundColor: C.primary, borderRadius: 6 },
-              { label: "Pengeluaran", data: ms.map((m) => mSum(m, "keluar")), backgroundColor: C.accent, borderRadius: 6 },
+              { label: "Pemasukan (Kas Masuk)", data: ms.map((m) => mSum(m, "masuk")), backgroundColor: "#2E7D1B", borderRadius: 6 },
+              { label: "Pengeluaran (Kas Keluar)", data: ms.map((m) => mSum(m, "keluar")), backgroundColor: "#FFE81F", borderRadius: 6 },
             ],
           },
           options: axOptions,
@@ -3117,7 +3246,7 @@ function charting() {
             datasets: [
               {
                 data: Object.values(stCount),
-                backgroundColor: [C.primary, C.accent, C.warn, "#0F9D7A"],
+                backgroundColor: ["#1B4310", "#2E7D1B", "#FFE81F", "#54A836"],
                 borderWidth: 0,
               },
             ],
@@ -3145,8 +3274,8 @@ function charting() {
           data: {
             labels: list.map((i) => i.nama),
             datasets: [
-              { label: "Stok Tersedia", data: list.map(stok), backgroundColor: C.primary, borderRadius: 6 },
-              { label: "Batas Minimum", data: list.map((i) => +i.minStok || 0), backgroundColor: C.warn, borderRadius: 6 },
+              { label: "Stok Tersedia", data: list.map(stok), backgroundColor: "#2E7D1B", borderRadius: 6 },
+              { label: "Batas Minimum", data: list.map((i) => +i.minStok || 0), backgroundColor: "#FFE81F", borderRadius: 6 },
             ],
           },
           options: axOptions,
@@ -3172,7 +3301,7 @@ function charting() {
             datasets: [
               {
                 data: Object.values(kond),
-                backgroundColor: ["#0F9D7A", C.warn, C.bad],
+                backgroundColor: ["#2E7D1B", "#FFE81F", "#D64545"],
                 borderWidth: 0,
               },
             ],
@@ -3216,8 +3345,8 @@ function charting() {
           data: {
             labels: ks,
             datasets: [
-              { label: "Masuk", data: ks.map((p) => g[p].m), backgroundColor: C.primary, borderRadius: 6 },
-              { label: "Keluar", data: ks.map((p) => g[p].k), backgroundColor: C.accent, borderRadius: 6 },
+              { label: "Masuk (Penerimaan)", data: ks.map((p) => g[p].m), backgroundColor: "#2E7D1B", borderRadius: 6 },
+              { label: "Keluar (Pengeluaran)", data: ks.map((p) => g[p].k), backgroundColor: "#FFE81F", borderRadius: 6 },
             ],
           },
           options: axOptions,

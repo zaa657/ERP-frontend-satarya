@@ -1,58 +1,66 @@
 /* =====================================================================
-   SATARYA ERP — "OCEAN WORKSPACE" DESIGN SYSTEM
-   Palet : Ocean Blue · Teal · Putih  (+ Dark mode)
-   Layout: Top navigation horizontal + command palette (tanpa sidebar)
+   SATARYA ERP — "LEMON, LEAF GREEN & WHITE" DESIGN SYSTEM
+   Palet : Hijau Daun · Kuning Lemon · Putih (+ Dark mode)
+   Layout: Top navigation horizontal + interactive custom calendar + command palette
    ===================================================================== */
 
 :root {
-  --ocean-900: #061a33;
-  --ocean-800: #0a2540;
-  --ocean-700: #0b3d6e;
-  --ocean-600: #0b5cad;
-  --ocean-500: #1673d4;
-  --ocean-400: #4b9be8;
-  --ocean-100: #dcebfb;
-  --ocean-50: #eef5fd;
-  --teal-700: #0b7f7a;
-  --teal-600: #0e9f9a;
-  --teal-500: #14b8a6;
-  --teal-300: #5eead4;
-  --teal-50: #e7f8f6;
+  /* Palet Hijau Daun (Leaf Green) */
+  --leaf-950: #0d2208;
+  --leaf-900: #122e0b;
+  --leaf-800: #1b4310;
+  --leaf-700: #225814;
+  --leaf-600: #2b6d19;
+  --leaf-500: #3b8724;
+  --leaf-400: #54a836;
+  --leaf-100: #e2f2dc;
+  --leaf-50: #f0f8ec;
 
-  --bg: #f2f6fb;
+  /* Palet Kuning Lemon (Lemon Yellow) */
+  --lemon-500: #ffe81f;
+  --lemon-600: #e5cc00;
+  --lemon-700: #bfa800;
+  --lemon-400: #ffee4d;
+  --lemon-100: #fffbc2;
+  --lemon-50: #fffde6;
+
+  /* Kanvas & Bidang Putih Bersih */
+  --bg: #f4f8f1;
   --surface: #ffffff;
-  --surface-2: #f7fafd;
-  --surface-3: #eef3f9;
-  --line: #e2e9f2;
-  --line-2: #cfdbe8;
-  --text: #0b1b2b;
-  --text-2: #33475c;
-  --muted: #6a7c90;
-  --primary: var(--ocean-600);
-  --primary-h: #094c8f;
-  --primary-soft: var(--ocean-50);
-  --accent: var(--teal-600);
-  --accent-soft: var(--teal-50);
-  --ok: #0f9d7a;
-  --ok-soft: #e3f6ef;
+  --surface-2: #fafdf8;
+  --surface-3: #edf5e8;
+  --line: #dfead8;
+  --line-2: #cdddc5;
+  --text: #12240e;
+  --text-2: #344830;
+  --muted: #647a60;
+
+  --primary: var(--leaf-700);
+  --primary-h: var(--leaf-800);
+  --primary-soft: var(--leaf-50);
+  --accent: #bfa800;
+  --accent-soft: var(--lemon-50);
+
+  --ok: #228b22;
+  --ok-soft: #e5f6e5;
   --warn: #c98303;
-  --warn-soft: #fdf3dc;
+  --warn-soft: #fff6e0;
   --bad: #d64545;
   --bad-soft: #fde8e8;
-  --info: var(--ocean-500);
-  --info-soft: var(--ocean-50);
+  --info: var(--leaf-600);
+  --info-soft: var(--leaf-50);
 
-  --top-bg: linear-gradient(100deg, #061a33 0%, #0a2540 45%, #0b3d6e 100%);
-  --hero-bg: linear-gradient(120deg, #0b3d6e 0%, #0b5cad 48%, #0e9f9a 100%);
+  --top-bg: linear-gradient(100deg, #102609 0%, #1b4310 50%, #255a17 100%);
+  --hero-bg: linear-gradient(120deg, #14330d 0%, #225814 55%, #34781f 100%);
 
   --r-xs: 6px;
   --r-sm: 10px;
   --r-md: 14px;
   --r-lg: 20px;
   --r-xl: 28px;
-  --sh-1: 0 1px 2px rgba(10, 37, 64, 0.06), 0 1px 1px rgba(10, 37, 64, 0.04);
-  --sh-2: 0 6px 18px -6px rgba(10, 37, 64, 0.14), 0 2px 6px rgba(10, 37, 64, 0.05);
-  --sh-3: 0 24px 60px -18px rgba(6, 26, 51, 0.38);
+  --sh-1: 0 1px 2px rgba(18, 46, 11, 0.06), 0 1px 1px rgba(18, 46, 11, 0.04);
+  --sh-2: 0 6px 18px -6px rgba(18, 46, 11, 0.14), 0 2px 6px rgba(18, 46, 11, 0.05);
+  --sh-3: 0 24px 60px -18px rgba(13, 34, 8, 0.38);
   --ff: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
   --ff-h: "Sora", "Manrope", system-ui, sans-serif;
   --top-h: 64px;
@@ -61,30 +69,30 @@
 }
 
 [data-theme="dark"] {
-  --bg: #06111d;
-  --surface: #0c1a2b;
-  --surface-2: #0f2034;
-  --surface-3: #13273e;
-  --line: #1a2e46;
-  --line-2: #24405f;
-  --text: #e6eef7;
-  --text-2: #bccadb;
-  --muted: #8396ad;
-  --primary: #3d8ee6;
-  --primary-h: #5aa2ee;
-  --primary-soft: rgba(61, 142, 230, 0.14);
-  --accent: #2dd4bf;
-  --accent-soft: rgba(45, 212, 191, 0.12);
-  --ok: #34d399;
-  --ok-soft: rgba(52, 211, 153, 0.12);
-  --warn: #fbbf24;
-  --warn-soft: rgba(251, 191, 36, 0.12);
+  --bg: #0b1709;
+  --surface: #12240e;
+  --surface-2: #182e14;
+  --surface-3: #203c1b;
+  --line: #294c23;
+  --line-2: #386430;
+  --text: #eaf4e7;
+  --text-2: #c5d8bf;
+  --muted: #8ca386;
+  --primary: #4ade80;
+  --primary-h: #6ee7a0;
+  --primary-soft: rgba(74, 222, 128, 0.14);
+  --accent: #ffe81f;
+  --accent-soft: rgba(255, 232, 31, 0.14);
+  --ok: #4ade80;
+  --ok-soft: rgba(74, 222, 128, 0.14);
+  --warn: #ffe81f;
+  --warn-soft: rgba(255, 232, 31, 0.14);
   --bad: #f87171;
-  --bad-soft: rgba(248, 113, 113, 0.13);
-  --info: #60a5fa;
-  --info-soft: rgba(96, 165, 250, 0.13);
-  --top-bg: linear-gradient(100deg, #030b15 0%, #071729 55%, #0a2540 100%);
-  --hero-bg: linear-gradient(120deg, #0a2540 0%, #0b4a8a 55%, #0b7f7a 100%);
+  --bad-soft: rgba(248, 113, 113, 0.14);
+  --info: #86efac;
+  --info-soft: rgba(134, 239, 172, 0.14);
+  --top-bg: linear-gradient(100deg, #071005 0%, #0d1e0a 55%, #152c10 100%);
+  --hero-bg: linear-gradient(120deg, #0e200b 0%, #173712 55%, #224c1a 100%);
   --sh-1: 0 1px 2px rgba(0, 0, 0, 0.4);
   --sh-2: 0 8px 22px -8px rgba(0, 0, 0, 0.6);
   --sh-3: 0 28px 70px -20px rgba(0, 0, 0, 0.8);
@@ -140,8 +148,8 @@ img {
   display: block;
 }
 ::selection {
-  background: var(--teal-300);
-  color: var(--ocean-900);
+  background: var(--lemon-500);
+  color: #122e0b;
 }
 .ico {
   width: 18px;
@@ -684,10 +692,10 @@ kbd {
 .brand-sub {
   display: block;
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--teal-300);
+  color: var(--lemon-500);
 }
 .nav {
   display: flex;
@@ -712,7 +720,7 @@ kbd {
   border-radius: 10px;
   border: 0;
   background: transparent;
-  color: rgba(232, 241, 251, 0.82);
+  color: rgba(232, 241, 251, 0.85);
   font-weight: 700;
   font-size: 13.5px;
   white-space: nowrap;
@@ -725,7 +733,7 @@ kbd {
 }
 .nav-btn.on {
   color: #fff;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.14);
 }
 .nav-btn.on::after {
   content: "";
@@ -735,7 +743,7 @@ kbd {
   bottom: 0;
   height: 3px;
   border-radius: 3px 3px 0 0;
-  background: var(--teal-300);
+  background: var(--lemon-500);
 }
 .nav-btn .caret {
   width: 14px;
@@ -823,15 +831,15 @@ kbd {
   letter-spacing: 0.06em;
   padding: 1px 6px;
   border-radius: 6px;
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--lemon-100);
+  color: #735a00;
   margin-left: 6px;
   vertical-align: 2px;
 }
 .top-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   margin-left: auto;
   flex-shrink: 0;
 }
@@ -840,12 +848,12 @@ kbd {
   align-items: center;
   gap: 10px;
   height: 38px;
-  width: 230px;
+  width: 210px;
   padding: 0 10px 0 12px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   background: rgba(255, 255, 255, 0.07);
-  color: rgba(232, 241, 251, 0.75);
+  color: rgba(232, 241, 251, 0.85);
   font-size: 13px;
   font-weight: 600;
   transition: background 0.15s, border-color 0.15s;
@@ -858,6 +866,218 @@ kbd {
   flex: 1;
   text-align: left;
 }
+
+/* =====================================================================
+   NAVBAR CUSTOM CALENDAR WIDGET (INTERACTIVE DATE PICKER ON ALL PAGES)
+   ===================================================================== */
+.cal-nav {
+  position: relative;
+}
+.top-cal-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 232, 31, 0.35);
+  background: rgba(255, 255, 255, 0.09);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
+}
+.top-cal-btn:hover,
+.cal-nav.open .top-cal-btn {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: var(--lemon-500);
+}
+.top-cal-btn .ico {
+  color: var(--lemon-500);
+  width: 17px;
+  height: 17px;
+}
+.top-cal-txt {
+  max-width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.top-cal-btn .caret {
+  width: 13px;
+  height: 13px;
+  opacity: 0.75;
+  transition: transform 0.2s;
+}
+.cal-nav.open .caret {
+  transform: rotate(180deg);
+}
+
+.cal-pop {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 320px;
+  padding: 14px;
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--sh-3);
+  color: var(--text);
+  z-index: 60;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+}
+.cal-nav.open .cal-pop {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.cal-pop-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.cal-pop-title {
+  font-family: var(--ff-h);
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--text);
+}
+.cal-nav-btns {
+  display: flex;
+  gap: 4px;
+}
+.cal-arrow-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  display: grid;
+  place-items: center;
+  color: var(--text-2);
+  padding: 0;
+}
+.cal-arrow-btn:hover {
+  background: var(--surface-3);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+.cal-direct-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  margin-bottom: 10px;
+}
+.cal-direct-input label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.cal-direct-input input[type="date"] {
+  flex: 1;
+  height: 32px;
+  padding: 0 8px;
+  border-radius: 6px;
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text);
+}
+.cal-presets {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+.cal-preset-btn {
+  flex: 1;
+  height: 26px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--text-2);
+  padding: 0;
+}
+.cal-preset-btn:hover {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+.cal-preset-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.cal-grid-d {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  text-align: center;
+}
+.cal-day-h {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+  padding: 3px 0;
+}
+.cal-cell-btn {
+  height: 32px;
+  border-radius: 7px;
+  border: 0;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  padding: 0;
+  display: grid;
+  place-items: center;
+  transition: background 0.12s, color 0.12s;
+}
+.cal-cell-btn:hover {
+  background: var(--surface-3);
+}
+.cal-cell-btn.other-m {
+  opacity: 0.25;
+}
+.cal-cell-btn.today {
+  border: 1.5px solid var(--primary);
+  color: var(--primary);
+}
+.cal-cell-btn.selected {
+  background: var(--lemon-500) !important;
+  color: #122e0b !important;
+  font-weight: 900;
+  box-shadow: 0 2px 8px rgba(255, 232, 31, 0.4);
+}
+.cal-pop-foot {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.cal-pop-foot b {
+  color: var(--primary);
+}
+
 .top .icon-btn {
   color: rgba(232, 241, 251, 0.85);
 }
@@ -873,13 +1093,13 @@ kbd {
   height: 18px;
   padding: 0 5px;
   border-radius: 999px;
-  background: var(--teal-500);
-  color: var(--ocean-900);
+  background: var(--lemon-500);
+  color: #122e0b;
   font-size: 10.5px;
-  font-weight: 800;
+  font-weight: 900;
   display: grid;
   place-items: center;
-  border: 2px solid var(--ocean-800);
+  border: 2px solid var(--leaf-900);
 }
 .user {
   position: relative;
@@ -908,8 +1128,9 @@ kbd {
   font-family: var(--ff-h);
   font-weight: 800;
   font-size: 13px;
-  color: #fff;
-  background: linear-gradient(135deg, var(--teal-500), var(--ocean-500));
+  color: #122e0b;
+  background: var(--lemon-500);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   flex-shrink: 0;
 }
 .avatar.lg {

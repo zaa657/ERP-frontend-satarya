@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <meta name="theme-color" content="#0A2540" />
-    <title>Satarya ERP — Ocean Workspace</title>
+    <meta name="theme-color" content="#1B4310" />
+    <title>Satarya ERP — Integrated Workspace</title>
     <link rel="icon" type="image/png" href="img/logo.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
