@@ -1532,17 +1532,24 @@ function render(keepFocus) {
   charts = [];
   const n = alerts().length;
   document.getElementById("side").innerHTML =
-    `<div class="brand">Manajemen Operasional</div><small>Kontraktor dan proyek</small>` +
+    `<div class="brand-wrap">
+      <div class="brand-icon">S</div>
+      <div class="brand-text">
+        <div class="brand">SATARYA</div>
+        <small>Sistem Operasional</small>
+      </div>
+    </div>
+    <div class="nav-body">` +
     NAV.map(
       ([g, items]) =>
         `<div class="grp">${g}</div>` +
         items
           .map(
             ([k, l]) =>
-              `<button class="${k == cur || (cur == "pd" && k == "proj") || (cur == "kd" && k == "karyawan") ? "on" : ""}" onclick="go('${k}')">${l}${k == "alert" && n ? `<span class="bd">${n}</span>` : ""}</button>`,
+              `<button class="${k == cur || (cur == "pd" && k == "proj") || (cur == "kd" && k == "karyawan") ? "on" : ""}" onclick="go('${k}')"><span>${l}</span>${k == "alert" && n ? `<span class="bd">${n}</span>` : ""}</button>`,
           )
           .join(""),
-    ).join("");
+    ).join("") + `</div>`;
   document.getElementById("ttl").textContent = TITLE[cur] || E[cur].t;
   const tgl = new Date().toLocaleDateString("id-ID", {
     weekday: "long",
