@@ -1533,7 +1533,9 @@ function render(keepFocus) {
   const n = alerts().length;
   document.getElementById("side").innerHTML =
     `<div class="brand-wrap">
-      <div class="brand-icon">S</div>
+      <div class="brand-img">
+        <img src="img/logo.png" alt="Logo Satarya" class="brand-logo-img">
+      </div>
       <div class="brand-text">
         <div class="brand">SATARYA</div>
         <small>Sistem Operasional</small>
