@@ -17,7 +17,7 @@
       (function () {
         try {
           var t = localStorage.getItem("satarya_theme");
-          if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          if (!t) t = "light";
           document.documentElement.setAttribute("data-theme", t);
         } catch (e) {}
       })();

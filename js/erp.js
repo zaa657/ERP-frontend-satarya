@@ -488,6 +488,14 @@ try {
   const sess = JSON.parse(localStorage.getItem(SESSION_KEY));
   if (sess && ROLES[sess.r]) ME = sess;
 } catch (e) {}
+if (!ME || !ROLES[ME.r]) {
+  ME = { u: "admin", n: "Administrator", r: "owner" };
+}
+
+function today() {
+  const d = new Date();
+  return new Date(d.getTime() - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+}
 
 const S = {
   page: "dash",
@@ -532,10 +540,6 @@ const rpS = (n) => {
 };
 const esc = (s) =>
   String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-const today = () => {
-  const d = new Date();
-  return new Date(d.getTime() - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
-};
 const sum = (a, f) => (a || []).reduce((s, x) => s + (+f(x) || 0), 0);
 const nm = (e, id) => ((D[e] || []).find((x) => x.id == id) || {}).nama || "-";
 const initials = (s) =>
@@ -3440,8 +3444,16 @@ function render(keepFocus) {
     }
   }
 
-  charting();
+  try {
+    charting();
+  } catch (err) {
+    console.warn("Chart rendering failed:", err);
+  }
 }
 
-// Mulai aplikasi saat skrip dimuat
-render();
+// Mulai aplikasi saat DOM siap
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => render());
+} else {
+  render();
+}
