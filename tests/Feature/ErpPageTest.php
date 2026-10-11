@@ -11,12 +11,12 @@ class ErpPageTest extends TestCase
         $response = $this->get(route('erp'));
 
         $response->assertOk();
-        $response->assertSee('<title>Sistem Manajemen Operasional</title>', false);
-        $response->assertSee('<aside id="side"></aside>', false);
-        $response->assertSee('<main id="main"></main>', false);
-        $response->assertSee('<dialog id="dlg"></dialog>', false);
-        $response->assertSee(asset('css/erp.css'), false);
-        $response->assertSee(asset('js/erp.js'), false);
+        $response->assertSee('<title>Satarya ERP — Ocean Workspace</title>', false);
+        $response->assertSee('<header id="top" class="top"></header>', false);
+        $response->assertSee('<main id="main" class="main"></main>', false);
+        $response->assertSee('<dialog id="dlg" class="sheet"></dialog>', false);
+        $response->assertSee('css/erp.css', false);
+        $response->assertSee('js/erp.js', false);
     }
 
     public function test_erp_static_assets_exist(): void
