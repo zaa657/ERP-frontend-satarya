@@ -111,7 +111,7 @@ const E = {
                     "Lainnya",
                 ],
             ],
-            ["pic", "Nama PIC"],
+            ["pic", "Nama Kontak / Penanggung Jawab (PIC)"],
             ["kontak", "Telepon / WhatsApp"],
             ["alamat", "Alamat"],
             ["rating", "Penilaian", ["5", "4", "3", "2", "1"]],
@@ -1996,6 +1996,19 @@ function extra(k) {
                     `<button class="btn btn-sm btn-soft" onclick="go('kd',${r.id})">Profil Karyawan →</button>`,
             ],
         ];
+    if (k === "gaji")
+        return [
+            [
+                "Gaji Bersih (THP)",
+                (r) => {
+                    const bersih = Math.max(
+                        0,
+                        (+r.nominal || 0) - (+r.pot_kasbon || 0) - (+r.pot_rugi || 0),
+                    );
+                    return `<b class="pos">${rp(bersih)}</b>`;
+                },
+            ],
+        ];
     if (k === "vendor")
         return [
             ["Penilaian", (r) => stars(r.rating)],
@@ -3304,7 +3317,8 @@ function fld(f, v, pre) {
     } else {
         // Default invoice number auto-generator
         const defVal = k === "no" && !val ? nextInvNo() : val;
-        i = `<input name="${k}" value="${esc(defVal)}" placeholder="Masukkan ${l.toLowerCase()}..." ${k === "ket" || k === "kontak" || k === "link" || k === "alamat" || k === "pic" ? "" : "required"}>`;
+        const ph = k === "pic" ? "mis. Budi Santoso (Narahubung / Sales Vendor)" : `Masukkan ${l.toLowerCase()}...`;
+        i = `<input name="${k}" value="${esc(defVal)}" placeholder="${ph}" ${k === "ket" || k === "kontak" || k === "link" || k === "alamat" || k === "pic" ? "" : "required"}>`;
     }
 
     return `<label class="${isFull ? "full" : ""}"><span>${l}</span>${i}</label>`;
@@ -3345,6 +3359,107 @@ window.openForm = (k, id, pre) => {
 
     const formEl = d.querySelector("#fm") || $("#fm");
     if (!formEl) return;
+
+    if (k === "gaji") {
+        const selKar = formEl.querySelector('[name="kar"]');
+        const inpNominal = formEl.querySelector('[name="nominal"]');
+        const inpPotKasbon = formEl.querySelector('[name="pot_kasbon"]');
+        const inpPotRugi = formEl.querySelector('[name="pot_rugi"]');
+        const fgrid = formEl.querySelector(".fgrid");
+
+        let calcBox = formEl.querySelector("#gaji_calc_box");
+        if (!calcBox && fgrid) {
+            calcBox = document.createElement("div");
+            calcBox.id = "gaji_calc_box";
+            calcBox.style.cssText =
+                "grid-column:1/-1;background:var(--surface-2,#f8fafc);border:1px solid var(--border,#e2e8f0);border-radius:10px;padding:12px 14px;font-size:12.5px;display:flex;flex-direction:column;gap:8px;";
+            fgrid.appendChild(calcBox);
+        }
+
+        const updateGajiCalc = (isKarChange = false) => {
+            const karId = selKar ? selKar.value : "";
+            const emp = karId ? (D.karyawan || []).find((x) => x.id == karId) : null;
+
+            if (isKarChange && emp) {
+                const unpKasbon = (D.kasbon || []).filter(
+                    (x) => x.kar == karId && x.status !== "Lunas",
+                );
+                const totalKasbon = unpKasbon.reduce(
+                    (s, x) => s + (+x.nominal || 0),
+                    0,
+                );
+
+                const unpRugi = (D.gantirugi || []).filter(
+                    (x) =>
+                        x.kar == karId &&
+                        x.status !== "Lunas" &&
+                        x.status !== "Sudah Dibayar",
+                );
+                const totalRugi = unpRugi.reduce(
+                    (s, x) => s + (+x.nominal || 0),
+                    0,
+                );
+
+                if (inpPotKasbon) inpPotKasbon.value = totalKasbon;
+                if (inpPotRugi) inpPotRugi.value = totalRugi;
+                if (inpNominal && (!r || !inpNominal.value || +inpNominal.value === 0)) {
+                    inpNominal.value = emp.gaji || 0;
+                }
+            }
+
+            const nominalVal = inpNominal ? +inpNominal.value || 0 : 0;
+            const potKasbonVal = inpPotKasbon ? +inpPotKasbon.value || 0 : 0;
+            const potRugiVal = inpPotRugi ? +inpPotRugi.value || 0 : 0;
+            const thp = Math.max(0, nominalVal - potKasbonVal - potRugiVal);
+
+            const unpKasbonList = karId
+                ? (D.kasbon || []).filter((x) => x.kar == karId && x.status !== "Lunas")
+                : [];
+            const unpRugiList = karId
+                ? (D.gantirugi || []).filter(
+                      (x) =>
+                          x.kar == karId &&
+                          x.status !== "Lunas" &&
+                          x.status !== "Sudah Dibayar",
+                  )
+                : [];
+
+            if (calcBox) {
+                if (!karId) {
+                    calcBox.innerHTML = `<span class="muted" style="color:var(--text-3,#64748b);">💡 <b>Petunjuk:</b> Pilih nama karyawan di atas. Sistem akan otomatis mengisi gaji pokok serta menghitung total potongan kasbon dan ganti rugi aktif yang belum lunas.</span>`;
+                } else {
+                    calcBox.innerHTML = `
+                        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border,#e2e8f0);padding-bottom:6px;">
+                            <span style="font-weight:700;">📊 Rincian Penggajian: <b>${esc(emp ? emp.nama : "Karyawan")}</b></span>
+                            <span class="badge ${thp > 0 ? "ok" : "warn"}" style="font-size:12px;font-weight:700;">Take Home Pay: ${rp(thp)}</span>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;font-size:12px;">
+                            <div>• Kasbon Tercatat: <b class="${unpKasbonList.length ? "neg" : ""}">${rp(unpKasbonList.reduce((s, x) => s + (+x.nominal || 0), 0))}</b> <span class="muted">(${unpKasbonList.length} tagihan)</span></div>
+                            <div>• Ganti Rugi Tercatat: <b class="${unpRugiList.length ? "neg" : ""}">${rp(unpRugiList.reduce((s, x) => s + (+x.nominal || 0), 0))}</b> <span class="muted">(${unpRugiList.length} tagihan)</span></div>
+                            <div>• Gaji Bersih (THP): <b class="pos" style="font-size:13px">${rp(thp)}</b></div>
+                        </div>
+                        ${
+                            unpKasbonList.length || unpRugiList.length
+                                ? `<div style="font-size:11.5px;color:var(--text-3,#64748b);line-height:1.4;">💡 Potongan kasbon dan ganti rugi otomatis terisi dari kewajiban aktif karyawan. Saat status disimpan sebagai <b>Lunas</b>, catatan kasbon & ganti rugi tersebut otomatis ditandai lunas.</div>`
+                                : `<div style="font-size:11.5px;color:var(--text-3,#64748b);">✓ Karyawan tidak memiliki catatan kasbon atau ganti rugi aktif.</div>`
+                        }
+                    `;
+                }
+            }
+        };
+
+        if (selKar) selKar.addEventListener("change", () => updateGajiCalc(true));
+        if (inpNominal) inpNominal.addEventListener("input", () => updateGajiCalc(false));
+        if (inpPotKasbon) inpPotKasbon.addEventListener("input", () => updateGajiCalc(false));
+        if (inpPotRugi) inpPotRugi.addEventListener("input", () => updateGajiCalc(false));
+
+        if (!r && selKar && selKar.value) {
+            updateGajiCalc(true);
+        } else {
+            updateGajiCalc(false);
+        }
+    }
+
     formEl.onsubmit = async (ev) => {
         ev.preventDefault();
         const o = r || { id: Date.now() };
@@ -3393,6 +3508,46 @@ window.openForm = (k, id, pre) => {
         });
 
         if (!r) D[k].push(o);
+
+        // Pelunasan otomatis kasbon & ganti rugi jika status gaji Lunas
+        if (k === "gaji" && o.status === "Lunas" && o.kar) {
+            let pelunasanInfo = [];
+            if (o.pot_kasbon > 0) {
+                let cntKb = 0;
+                (D.kasbon || []).forEach((kb) => {
+                    if (kb.kar == o.kar && kb.status !== "Lunas") {
+                        kb.status = "Lunas";
+                        const note = `[Lunas potong gaji ${o.bulan || ""}]`;
+                        if (!String(kb.ket || "").includes(note)) {
+                            kb.ket = (kb.ket ? kb.ket + " " : "") + note;
+                        }
+                        cntKb++;
+                    }
+                });
+                if (cntKb) pelunasanInfo.push(`${cntKb} kasbon`);
+            }
+            if (o.pot_rugi > 0) {
+                let cntGr = 0;
+                (D.gantirugi || []).forEach((gr) => {
+                    if (
+                        gr.kar == o.kar &&
+                        gr.status !== "Lunas" &&
+                        gr.status !== "Sudah Dibayar"
+                    ) {
+                        gr.status = "Lunas";
+                        const note = `[Lunas potong gaji ${o.bulan || ""}]`;
+                        if (!String(gr.ket || "").includes(note)) {
+                            gr.ket = (gr.ket ? gr.ket + " " : "") + note;
+                        }
+                        cntGr++;
+                    }
+                });
+                if (cntGr) pelunasanInfo.push(`${cntGr} ganti rugi`);
+            }
+            if (pelunasanInfo.length) {
+                toast(`Otomatis melunasi ${pelunasanInfo.join(" & ")} karyawan`);
+            }
+        }
 
         logAct(r ? "Ubah" : "Tambah", k, `${e.s}: ${recLabel(k, o)}`);
         save();
@@ -3454,6 +3609,7 @@ window.quickAddRef = (targetKey, selectElementId) => {
                 )
                 .join("");
         sel.value = newItem.id;
+        sel.dispatchEvent(new Event("change"));
     }
     toast(`${e.s} "${newItem.nama}" ditambahkan!`);
 };
