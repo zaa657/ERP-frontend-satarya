@@ -3087,8 +3087,9 @@ dialog::backdrop {
 @media (max-width: 1023px) {
   .nav,
   .search-trigger,
-  .user {
-    display: none;
+  .user,
+  .cal-nav {
+    display: none !important;
   }
   .burger {
     display: inline-grid !important;
