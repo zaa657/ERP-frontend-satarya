@@ -2613,13 +2613,14 @@ dialog::backdrop {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 0 18px;
+  padding: 0 14px 0 18px;
   border-bottom: 1px solid var(--line);
 }
 .cmdk-in .ico {
   color: var(--primary);
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
 }
 .cmdk-in input {
   flex: 1;
@@ -2628,9 +2629,34 @@ dialog::backdrop {
   background: transparent;
   font-size: 16px;
   font-weight: 600;
+  min-width: 0;
 }
 .cmdk-in input:focus {
   outline: 0;
+}
+.cmdk-close {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--text-2);
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.cmdk-close:hover {
+  background: var(--bad-soft);
+  color: var(--bad);
+  border-color: color-mix(in srgb, var(--bad) 35%, transparent);
+}
+.cmdk-close .ico {
+  width: 18px;
+  height: 18px;
+  color: currentColor;
 }
 .cmdk-in kbd {
   color: var(--muted);

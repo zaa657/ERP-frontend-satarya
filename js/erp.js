@@ -2980,7 +2980,7 @@ window.openCmdk = (mode) => {
       <div class="cmdk-in">
         ${I("search")}
         <input type="text" placeholder="${mode === "create" ? "Pilih data yang ingin ditambahkan..." : "Ketik untuk mencari modul, perintah, atau tindakan..."}" id="cmdkInput" autofocus>
-        <kbd>Esc untuk tutup</kbd>
+        <button type="button" class="icon-btn cmdk-close" onclick="closeCmdk()" aria-label="Tutup pencarian" title="Tutup">${I("x")}</button>
       </div>
       <div class="cmdk-list" id="cmdkList">${renderItems(mode === "create" ? "Tambah" : "")}</div>
       <div class="cmdk-foot">
