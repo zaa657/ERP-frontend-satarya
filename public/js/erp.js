@@ -947,7 +947,6 @@ window.openDrawer = () => {
     </div>
     <div class="drawer-f">
       <button class="drawer-link" style="padding-left:12px" onclick="go('set')">${I("set")}Pengaturan & Data</button>
-      <button class="drawer-link" style="padding-left:12px" onclick="go('log')">${I("log")}Log Aktivitas</button>
       <button class="drawer-link" style="padding-left:12px" onclick="toggleTheme()">${I("moon")}Ganti tema</button>
     </div></div>`;
   dr.onclick = closeDrawer;
@@ -1143,7 +1142,6 @@ function dash() {
                 <h3>Aktivitas Terbaru</h3>
                 <p>Jejak perubahan data yang dicatat sistem secara otomatis.</p>
               </div>
-              ${can("log") ? `<button class="btn btn-sm btn-ghost" onclick="go('log')">Audit Log Lengkap →</button>` : ""}
             </div>
             <div class="card-b">
               <div class="tl">
