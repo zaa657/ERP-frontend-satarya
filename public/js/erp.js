@@ -447,9 +447,19 @@ try {
 }
 const normalize = () => {
   Object.keys(E).forEach((k) => (D[k] = Array.isArray(D[k]) ? D[k] : []));
-  D.log = (Array.isArray(D.log) ? D.log : []).filter((l) => l.k !== "auth" && l.a !== "Masuk" && l.a !== "Keluar");
+  // Aktivitas Terbaru hanya di memori sementara (tidak disimpan di localhost/localStorage & otomatis terhapus saat refresh)
+  D.log = [];
   try {
     localStorage.removeItem("satarya_session");
+    const raw = localStorage.getItem(KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && (parsed.log || parsed.act)) {
+        delete parsed.log;
+        delete parsed.act;
+        localStorage.setItem(KEY, JSON.stringify(parsed));
+      }
+    }
   } catch (e) {}
 };
 normalize();
@@ -482,7 +492,9 @@ const PAGE_SIZE = 25;
 
 const save = () => {
   try {
-    localStorage.setItem(KEY, JSON.stringify(D));
+    const toSave = { ...D };
+    delete toSave.log; // Jangan simpan log aktivitas ke localStorage agar otomatis bersih saat refresh
+    localStorage.setItem(KEY, JSON.stringify(toSave));
   } catch (e) {
     toast("Gagal menyimpan: " + e.message, "bad");
   }
@@ -619,8 +631,15 @@ const recLabel = (k, r) => {
   return E[k] ? E[k].s : k;
 };
 const logAct = (a, k, label) => {
+  if (!Array.isArray(D.log)) D.log = [];
   D.log.unshift({ t: new Date().toISOString(), u: ME ? ME.n : "Sistem", r: ME ? ME.r : "", a, k, l: String(label || "").slice(0, 140) });
   if (D.log.length > 400) D.log.length = 400;
+};
+
+window.clearActLog = () => {
+  D.log = [];
+  render(true);
+  toast("Aktivitas terbaru dibersihkan");
 };
 
 function toast(m, type) {
@@ -1140,8 +1159,9 @@ function dash() {
             <div class="card-h">
               <div>
                 <h3>Aktivitas Terbaru</h3>
-                <p>Jejak perubahan data yang dicatat sistem secara otomatis.</p>
+                <p>Jejak perubahan data sistem (sementara &bull; otomatis terhapus saat refresh browser).</p>
               </div>
+              <button type="button" class="btn btn-sm btn-ghost" onclick="clearActLog()" title="Bersihkan riwayat aktivitas">${I("trash")} Bersihkan</button>
             </div>
             <div class="card-b">
               <div class="tl">
