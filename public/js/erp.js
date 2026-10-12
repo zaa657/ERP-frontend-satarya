@@ -582,6 +582,63 @@ const save = () => {
    --------------------------------------------------------------------- */
 const $ = (s, r) => (r || document).querySelector(s);
 const rp = (n) => "Rp " + Math.round(+n || 0).toLocaleString("id-ID");
+const formatRibuan = (val) => {
+    if (val == null || val === "") return "";
+    const str = String(val).replace(/\D/g, "").replace(/^0+(?=\d)/, "");
+    if (!str) return val === 0 || val === "0" ? "0" : "";
+    return str.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+const parseNominal = (val) => {
+    if (val == null || val === "") return 0;
+    const clean = String(val).replace(/\./g, "").replace(/,/g, ".").replace(/[^\d.-]/g, "");
+    const num = parseFloat(clean);
+    return isNaN(num) ? 0 : num;
+};
+function handleNominalInput(inp) {
+    if (!inp) return;
+    const raw = inp.value;
+    const selEnd = inp.selectionEnd != null ? inp.selectionEnd : raw.length;
+    const digitsBefore = raw.slice(0, selEnd).replace(/\D/g, "").length;
+
+    const cleanDigits = raw.replace(/\D/g, "").replace(/^0+(?=\d)/, "");
+    const formatted = cleanDigits ? cleanDigits.replace(/\B(?=(\d{3})+(?!\d))/g, ".") : "";
+
+    inp.value = formatted;
+
+    let newPos = 0;
+    let counted = 0;
+    while (newPos < formatted.length && counted < digitsBefore) {
+        if (/\d/.test(formatted[newPos])) {
+            counted++;
+        }
+        newPos++;
+    }
+    if (inp.setSelectionRange) {
+        inp.setSelectionRange(newPos, newPos);
+    }
+}
+
+document.addEventListener("input", (e) => {
+    if (e.target && e.target.matches && e.target.matches('input[data-nominal="1"]')) {
+        handleNominalInput(e.target);
+    }
+});
+
+document.addEventListener("keydown", (e) => {
+    if (e.target && e.target.matches && e.target.matches('input[data-nominal="1"]')) {
+        const inp = e.target;
+        if (e.key === "Backspace" && inp.selectionStart === inp.selectionEnd) {
+            const pos = inp.selectionStart;
+            if (pos > 0 && inp.value[pos - 1] === ".") {
+                e.preventDefault();
+                const val = inp.value;
+                inp.value = val.slice(0, pos - 2) + val.slice(pos);
+                handleNominalInput(inp);
+            }
+        }
+    }
+});
+
 const rpS = (n) => {
     const v = +n || 0,
         a = Math.abs(v),
@@ -3308,8 +3365,17 @@ function fld(f, v, pre) {
     `;
     } else if (t === "txt") {
         i = `<textarea name="${k}" placeholder="Tuliskan ${l.toLowerCase()}...">${esc(val)}</textarea>`;
-    } else if (t === "n" || t === "q") {
-        i = `<input type="number" step="any" min="0" name="${k}" value="${esc(val)}" placeholder="${t === "n" ? "mis. 50000000" : "1"}" required>`;
+    } else if (t === "n") {
+        const displayVal = val != null && val !== "" ? formatRibuan(val) : "";
+        const ph =
+            k === "harga"
+                ? "mis. 150.000"
+                : k === "target" || k === "nilai"
+                  ? "mis. 100.000.000"
+                  : "mis. 5.000.000";
+        i = `<input type="text" inputmode="numeric" name="${k}" value="${esc(displayVal)}" placeholder="${ph}" data-nominal="1" autocomplete="off" required>`;
+    } else if (t === "q") {
+        i = `<input type="number" step="any" min="0" name="${k}" value="${esc(val)}" placeholder="1" required>`;
     } else if (t === "d") {
         i = `<input type="date" name="${k}" value="${esc(val || today())}" required>`;
     } else if (t === "m") {
@@ -3400,16 +3466,19 @@ window.openForm = (k, id, pre) => {
                     0,
                 );
 
-                if (inpPotKasbon) inpPotKasbon.value = totalKasbon;
-                if (inpPotRugi) inpPotRugi.value = totalRugi;
-                if (inpNominal && (!r || !inpNominal.value || +inpNominal.value === 0)) {
-                    inpNominal.value = emp.gaji || 0;
+                if (inpPotKasbon) inpPotKasbon.value = formatRibuan(totalKasbon);
+                if (inpPotRugi) inpPotRugi.value = formatRibuan(totalRugi);
+                if (
+                    inpNominal &&
+                    (!r || !inpNominal.value || parseNominal(inpNominal.value) === 0)
+                ) {
+                    inpNominal.value = formatRibuan(emp.gaji || 0);
                 }
             }
 
-            const nominalVal = inpNominal ? +inpNominal.value || 0 : 0;
-            const potKasbonVal = inpPotKasbon ? +inpPotKasbon.value || 0 : 0;
-            const potRugiVal = inpPotRugi ? +inpPotRugi.value || 0 : 0;
+            const nominalVal = inpNominal ? parseNominal(inpNominal.value) : 0;
+            const potKasbonVal = inpPotKasbon ? parseNominal(inpPotKasbon.value) : 0;
+            const potRugiVal = inpPotRugi ? parseNominal(inpPotRugi.value) : 0;
             const thp = Math.max(0, nominalVal - potKasbonVal - potRugiVal);
 
             const unpKasbonList = karId
@@ -3504,7 +3573,11 @@ window.openForm = (k, id, pre) => {
         });
 
         e.f.forEach(([n, , t]) => {
-            if (t === "n" || t === "q") o[n] = +o[n] || 0;
+            if (t === "n") {
+                o[n] = parseNominal(o[n]);
+            } else if (t === "q") {
+                o[n] = +o[n] || 0;
+            }
         });
 
         if (!r) D[k].push(o);
