@@ -11,7 +11,7 @@ class ErpPageTest extends TestCase
         $response = $this->get(route('erp'));
 
         $response->assertOk();
-        $response->assertSee('<title>Satarya ERP — Ocean Workspace</title>', false);
+        $response->assertSee('<title>Satarya ERP — Integrated Workspace</title>', false);
         $response->assertSee('<header id="top" class="top"></header>', false);
         $response->assertSee('<main id="main" class="main"></main>', false);
         $response->assertSee('<dialog id="dlg" class="sheet"></dialog>', false);

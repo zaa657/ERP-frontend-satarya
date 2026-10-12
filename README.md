@@ -1,58 +1,89 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Satarya ERP — Sistem Manajemen Operasional Terpadu
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi Enterprise Resource Planning (ERP) modern berbasis web untuk manajemen operasional kontraktor, logistik, proyek klien, kas keuangan, dan penggajian karyawan.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📁 Struktur Folder Proyek (IT Architecture)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Repositori ini menggunakan arsitektur standar **Laravel & Web Modern**, memisahkan secara tegas antara berkas publik web, logika aplikasi, template, dan konfigurasi:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```text
+Project_admin/
+├── app/                  # Logika backend PHP (Controllers, Models, Providers)
+│   ├── Http/             # HTTP Controllers & Middleware
+│   ├── Models/           # Model Eloquent (User, dll.)
+│   └── Providers/        # Service Providers aplikasi
+├── bootstrap/            # Berkas inisialisasi framework Laravel
+│   ├── app.php           # Konfigurasi routing & middleware
+│   └── cache/            # Cache internal framework
+├── config/               # Seluruh konfigurasi aplikasi (app, database, auth, session, dll.)
+├── database/             # Skema basis data, migration, factory, dan seeder
+├── public/               # Web Server Document Root (Pusat seluruh asset publik)
+│   ├── css/
+│   │   └── erp.css       # Stylesheet utama aplikasi (design system, tema, layout)
+│   ├── js/
+│   │   └── erp.js        # Logika aplikasi frontend SPA (state, modul, kalkulasi)
+│   ├── img/
+│   │   └── logo.png      # Logo resmi perusahaan
+│   ├── index.html        # Entry point static SPA (untuk preview statis/offline)
+│   ├── index.php         # Entry point web server PHP / Laravel
+│   ├── .htaccess         # Konfigurasi rewrite Apache
+│   ├── favicon.ico       # Favicon tab browser
+│   └── robots.txt        # Direktif crawler web
+├── resources/            # Template view dan asset mentah
+│   ├── views/
+│   │   └── erp.blade.php # Template Blade utama yang merender shell aplikasi
+│   ├── css/              # Source CSS pendukung
+│   └── js/               # Source JS pendukung
+├── routes/               # Definisi endpoint URL
+│   ├── web.php           # Route web publik (merender tampilan ERP)
+│   └── console.php       # Perintah konsol Artisan
+├── storage/              # Berkas penyimpanan sementara, sesi, cache, dan log
+├── tests/                # Otomatisasi pengujian fitur (Feature & Unit Tests)
+│   ├── Feature/          # Test integritas halaman dan static assets
+│   └── Unit/             # Test fungsi unit
+├── artisan               # Command Line Interface (CLI) Laravel
+├── composer.json         # Konfigurasi dependensi PHP & metadata proyek
+├── index.html            # Redirection otomatis ke public/index.html
+└── package.json          # Konfigurasi toolchain frontend
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## 🚀 Cara Menjalankan Aplikasi
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Aplikasi dapat dijalankan melalui **dua metode**:
 
-## Code of Conduct
+### Metode 1: Menggunakan PHP / Laravel Server (Direkomendasikan)
+1. Pastikan PHP (>= 8.2) dan Composer terpasang di komputer.
+2. Jalankan server lokal:
+   ```bash
+   php artisan serve
+   ```
+3. Buka browser di alamat: `http://127.0.0.1:8000`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Metode 2: Langsung via Browser / Static Server
+1. Buka berkas [public/index.html](public/index.html) langsung di peramban (Google Chrome / Edge / Firefox) atau gunakan ekstensi Live Server.
+2. Seluruh data transaksi tersimpan secara lokal dan interaktif.
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🧪 Menjalankan Pengujian (Testing)
 
-## License
+Untuk memastikan seluruh halaman, routing, dan asset statis berfungsi dengan baik:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan test
+```
+
+---
+
+## 🛠️ Modul Utama Satarya ERP
+
+* **Dashboard & KPI**: Ringkasan performa omzet, kas aktif, dan status pekerjaan.
+* **Proyek & Kanban**: Manajemen kontrak, pelacakan progres, dan arsip RAB PDF.
+* **Keuangan & Invoice**: Buku kas harian, penagihan termin otomatis, dan Laba-Rugi (P&L).
+* **SDM & Payroll**: Profil karyawan, absensi, kalkulasi otomatis kasbon & ganti rugi, serta cetak slip gaji.
+* **Logistik & Perlengkapan**: Inventaris alat, mutasi stok material, dan pemeliharaan barang rusak.
+* **Vendor & Mitra**: Direktori rekanan dengan nama narahubung (PIC) dan kontak cepat WhatsApp.

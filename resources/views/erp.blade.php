@@ -26,9 +26,6 @@
     <link rel="stylesheet" href="css/erp.css" />
   </head>
   <body>
-    <!-- HALAMAN LOGIN (TAMPILAN SAJA / PREVIEW) -->
-    <section id="login" class="login" hidden></section>
-
     <!-- APLIKASI UTAMA -->
     <div id="app" class="app">
       <!-- Top navigation horizontal -->
