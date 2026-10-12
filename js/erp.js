@@ -1182,7 +1182,6 @@ function renderTop() {
       ${renderCalWidget()}
       <button class="icon-btn" onclick="toggleTheme()" title="${dark ? "Mode terang" : "Mode gelap"}" aria-label="Ganti tema">${I(dark ? "sun" : "moon")}</button>
       <button class="icon-btn" onclick="go('alert')" title="${n} peringatan" aria-label="${n} peringatan">${I("alert")}${n ? `<span class="cnt">${n > 99 ? "99+" : n}</span>` : ""}</button>
-      <button class="btn btn-sm btn-lemon" onclick="showLogin()" title="Pratinjau Tampilan Halaman Login" style="font-size:12px;padding:0 12px;gap:6px">${I("lock")} Halaman Login</button>
     </div>
   </div>`;
 }
@@ -1270,7 +1269,6 @@ window.openDrawer = () => {
       <button class="drawer-link ${isOn("alert") ? "on" : ""}" style="padding-left:12px;font-weight:800" onclick="go('alert')">${I("alert")}Peringatan <span class="badge bad plain" style="margin-left:auto">${alerts().length}</span></button>
     </div>
     <div class="drawer-f">
-      <button class="drawer-link" style="padding-left:12px" onclick="closeDrawer();showLogin()">${I("lock")}Halaman Login (Tampilan)</button>
       <button class="drawer-link" style="padding-left:12px" onclick="toggleTheme()">${I("moon")}Ganti tema</button>
     </div></div>`;
     dr.onclick = closeDrawer;
@@ -1294,94 +1292,6 @@ window.toggleTheme = () => {
     } catch (e) {}
     if ($("#drawer").classList.contains("open")) closeDrawer();
     render(true);
-};
-
-/* ---------------------------------------------------------------------
-   8. HALAMAN LOGIN (TAMPILAN SAJA / PREVIEW UI)
-   --------------------------------------------------------------------- */
-window.showLogin = () => {
-    sessionStorage.removeItem("satarya_view_app");
-    const appEl = $("#app");
-    if (appEl) appEl.hidden = true;
-    const loginEl = $("#login");
-    if (!loginEl) return;
-    loginEl.hidden = false;
-    window.scrollTo(0, 0);
-
-    loginEl.innerHTML = `
-      <div class="login-art">
-        <div class="login-brand">
-          <span class="brand-logo"><img src="img/logo.png" alt="Satarya"></span>
-          <div><b>SATARYA</b><span>Sistem Operasional ERP</span></div>
-        </div>
-        <div class="login-copy">
-          <h2>Kelola proyek, kas, stok & tim <em>dalam satu alur terpadu.</em></h2>
-          <p>Workspace operasional kontraktor modern: kontrol anggaran proyek, penagihan invoice termin, mutasi kas harian, hingga logistik peralatan dan absensi tim lapangan.</p>
-          <div class="login-feats">
-            <span>Papan Kanban</span>
-            <span>Invoice Termin</span>
-            <span>Laba-Rugi</span>
-            <span>Stok Material</span>
-            <span>Kas Harian</span>
-            <span>Mode Gelap</span>
-          </div>
-        </div>
-        <div class="login-foot">© ${new Date().getFullYear()} Satarya ERP · Solusi Manajemen Operasional Terpadu</div>
-        ${WAVES}
-      </div>
-      <div class="login-panel">
-        <form class="login-card" id="loginForm" onsubmit="event.preventDefault(); enterApp();">
-          <div class="brand-logo" style="width:52px;height:52px;margin-bottom:18px"><img src="img/logo.png" alt="Satarya"></div>
-          <h1>Masuk ke Akun</h1>
-          <p>Silakan isi formulir di bawah ini untuk mengakses dashboard ERP.</p>
-          
-          <label class="field">
-            <span>Nama Pengguna atau Email</span>
-            <input type="text" name="u" placeholder="mis. admin@satarya.id / Nama Pengguna" value="admin" autocomplete="username">
-          </label>
-          
-          <label class="field">
-            <span>Kata Sandi</span>
-            <div class="pw-wrap">
-              <input type="password" name="p" placeholder="••••••••" value="••••••••" autocomplete="current-password">
-              <button type="button" class="icon-btn" onclick="const i=this.previousElementSibling;i.type=i.type==='password'?'text':'password'" aria-label="Tampilkan sandi">${I("eye")}</button>
-            </div>
-          </label>
-
-          <div style="display:flex;align-items:center;justify-content:space-between;margin:10px 0 22px;font-size:13px;">
-            <label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-weight:600;color:var(--text-2);">
-              <input type="checkbox" checked style="width:16px;height:16px;accent-color:var(--primary);cursor:pointer"> Ingat Saya
-            </label>
-            <a href="javascript:void(0)" onclick="toast('Fitur pemulihan kata sandi belum diaktifkan (hanya tampilan)')" style="color:var(--primary);font-weight:700;text-decoration:none;">Lupa Kata Sandi?</a>
-          </div>
-
-          <button class="btn btn-primary" type="submit" style="width:100%;height:46px;font-size:14.5px;font-weight:800;">
-            ${I("lock")} Masuk ke Workspace
-          </button>
-          
-          <button type="button" class="btn btn-soft" onclick="enterApp()" style="width:100%;height:40px;margin-top:10px;font-weight:700;">
-            ${I("arrowR")} Buka Dashboard Langsung
-          </button>
-
-          <div style="margin-top:22px;padding:12px 14px;border-radius:12px;background:var(--lemon-100);border:1px solid var(--lemon-300);color:#3d3300;font-size:12.5px;display:flex;align-items:flex-start;gap:10px;line-height:1.45;">
-            <span style="color:#735a00;flex-shrink:0;margin-top:1px">${I("info")}</span>
-            <div>
-              <b>Mode Pratinjau Tampilan (Belum Difungsikan)</b>
-              <div style="margin-top:2px;opacity:0.9">Halaman login ini dibuat khusus untuk meninjau desain antarmuka. Belum terhubung ke autentikasi database, sehingga Anda dapat langsung menekan tombol <b>Masuk</b> untuk membuka dashboard.</div>
-            </div>
-          </div>
-        </form>
-      </div>`;
-};
-
-window.enterApp = () => {
-    sessionStorage.setItem("satarya_view_app", "1");
-    const loginEl = $("#login");
-    if (loginEl) loginEl.hidden = true;
-    const appEl = $("#app");
-    if (appEl) appEl.hidden = false;
-    render();
-    toast("Membuka Dashboard ERP (Mode Pratinjau)");
 };
 
 /* Header halaman */
@@ -3839,16 +3749,6 @@ window.openCmdk = (mode) => {
             toggleTheme();
         },
     });
-    listItems.push({
-        cat: "Tampilan",
-        title: "Halaman Login (Pratinjau Tampilan)",
-        sub: "Buka desain antarmuka halaman login",
-        ico: "lock",
-        act: () => {
-            closeCmdk();
-            showLogin();
-        },
-    });
 
     const renderItems = (filter) => {
         const q = (filter || "").toLowerCase().trim();
@@ -4226,11 +4126,7 @@ function charting() {
    21. ROUTER & RENDER UTAMA
    --------------------------------------------------------------------- */
 window.go = (pageKey, id) => {
-    if (pageKey === "login") {
-        showLogin();
-        return;
-    }
-    if (pageKey === "set") pageKey = "dash";
+    if (pageKey === "set" || pageKey === "login") pageKey = "dash";
     S.page = pageKey;
     S.id = id != null ? id : null;
 
@@ -4243,15 +4139,13 @@ window.go = (pageKey, id) => {
 };
 
 function render(keepFocus) {
-    if (S.page === "set") S.page = "dash";
+    if (S.page === "set" || S.page === "login") S.page = "dash";
     // Hancurkan grafik sebelumnya agar tidak bocor memori
     charts.forEach((c) => c.destroy());
     charts = [];
 
     const appEl = $("#app");
     if (appEl) appEl.hidden = false;
-    const loginEl = $("#login");
-    if (loginEl) loginEl.hidden = true;
 
     renderTop();
     renderTabbar();
@@ -4285,13 +4179,9 @@ function render(keepFocus) {
     }
 }
 
-// Mulai aplikasi saat DOM siap (Tampilkan halaman login pratinjau terlebih dahulu)
+// Mulai aplikasi langsung ke dashboard saat DOM siap
 const initApp = () => {
-    if (!sessionStorage.getItem("satarya_view_app") || window.location.hash === "#login") {
-        showLogin();
-    } else {
-        render();
-    }
+    render();
 };
 
 if (document.readyState === "loading") {
