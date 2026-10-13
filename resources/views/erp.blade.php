@@ -23,7 +23,7 @@
       })();
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-    <link rel="stylesheet" href="css/erp.css" />
+    <link rel="stylesheet" href="css/erp.css?v={{ filemtime(public_path('css/erp.css')) }}" />
   </head>
   <body>
     <!-- APLIKASI UTAMA -->
@@ -56,6 +56,6 @@
     <!-- Notifikasi -->
     <div id="toasts" class="toasts" aria-live="polite"></div>
 
-    <script src="js/erp.js"></script>
+    <script src="js/erp.js?v={{ filemtime(public_path('js/erp.js')) }}"></script>
   </body>
 </html>

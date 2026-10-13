@@ -1941,7 +1941,10 @@ function extra(k) {
             [
                 "Aksi Cepat",
                 (r) =>
-                    `<button class="btn btn-sm btn-soft" onclick="go('pd',${r.id})">Lihat Detail →</button>`,
+                    `<div class="quick">
+            <button class="btn btn-sm btn-soft" onclick="go('pd',${r.id})">Lihat Detail →</button>
+            <button class="btn btn-sm" onclick="printInvoice(null,${r.id})">${I("print")} Cetak</button>
+          </div>`,
             ],
         ];
     if (k === "karyawan")
@@ -2503,7 +2506,7 @@ function projDetail() {
 
     const actions = `
     <button class="btn" onclick="go('proj')">${I("chevL")}Daftar Proyek</button>
-    <button class="btn" onclick="window.print()">${I("print")}Cetak Lembar Proyek</button>
+    <button class="btn" onclick="printInvoice(null,${p.id})">${I("print")}Cetak Invoice</button>
     <button class="btn btn-primary" onclick="openForm('proj',${p.id})">${I("edit")}Ubah Proyek</button>`;
 
     return (
@@ -2677,7 +2680,7 @@ function karyDetail() {
 
     const actions = `
     <button class="btn" onclick="go('karyawan')">${I("chevL")}Daftar Karyawan</button>
-    <button class="btn" onclick="window.print()">${I("print")}Cetak Profil</button>
+    <button class="btn" onclick="printInvoice()">${I("print")}Cetak Invoice</button>
     <button class="btn btn-primary" onclick="openForm('karyawan',${k.id})">${I("edit")}Ubah Data</button>`;
 
     return (
@@ -2800,17 +2803,37 @@ function karyDetail() {
 /* ---------------------------------------------------------------------
    15. CETAK INVOICE & PELUNASAN KE KAS
    --------------------------------------------------------------------- */
-window.printInvoice = (id) => {
-    const inv = id != null ? D.invoice.find((x) => x.id == id) : null;
-    const p = inv && inv.proj ? D.proj.find((x) => x.id == inv.proj) || {} : {};
+function renderInvoiceTemplate(id, projId) {
     const area = $("#print");
     if (!area) return;
 
+    const inv =
+        id != null
+            ? D.invoice.find((x) => x.id == id)
+            : projId != null
+              ? D.invoice
+                    .slice()
+                    .reverse()
+                    .find((x) => x.proj == projId) || null
+              : null;
+    const p =
+        inv && inv.proj
+            ? D.proj.find((x) => x.id == inv.proj) || {}
+            : projId != null
+              ? D.proj.find((x) => x.id == projId) || {}
+              : {};
+
+    const cleanStr = (v) => {
+        const s = String(v == null ? "" : v).trim();
+        return s === "-" ? "" : s;
+    };
+
     const fmtSlashDate = (s) => {
-        if (!s) return "";
-        const parts = String(s).split("-");
+        const c = cleanStr(s);
+        if (!c) return "";
+        const parts = c.split("-");
         if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
-        return s;
+        return c;
     };
 
     const rpPlain = (n) => {
@@ -2818,13 +2841,17 @@ window.printInvoice = (id) => {
         return val > 0 ? "Rp" + Math.round(val).toLocaleString("id-ID") : "";
     };
 
-    const klienName = inv ? p.klien || inv.klien || "" : "";
+    const klienName = inv
+        ? cleanStr(p.klien || inv.klien)
+        : cleanStr(p.klien);
     const tglStr = inv ? fmtSlashDate(inv.tgl) : "";
-    const alamatStr = inv ? p.alamat || inv.alamat || "" : "";
-    const noInv = inv ? inv.no || "" : "";
+    const alamatStr = inv
+        ? cleanStr(p.alamat || inv.alamat)
+        : cleanStr(p.alamat);
+    const noInv = inv ? cleanStr(inv.no) : "";
 
-    const hasProd = Boolean(inv && (inv.uraian || +inv.nominal > 0));
-    const prodName = hasProd ? inv.uraian || "" : "";
+    const hasProd = Boolean(inv && (cleanStr(inv.uraian) || +inv.nominal > 0));
+    const prodName = hasProd ? cleanStr(inv.uraian) : "";
     const qtyVal = hasProd ? +inv.qty || 1 : "";
     const totalVal = hasProd ? +inv.nominal || 0 : 0;
     const priceVal = hasProd
@@ -2841,10 +2868,20 @@ window.printInvoice = (id) => {
                   .filter(Boolean)
             : [];
 
-    const estimasiStr = inv && inv.estimasi ? inv.estimasi : "";
+    const estimasiStr = inv ? cleanStr(inv.estimasi) : "";
 
     area.innerHTML = `
     <div class="inv-doc">
+      <svg class="inv-bg-arc" viewBox="0 0 380 230" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="invArcGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f7f7f8" />
+            <stop offset="100%" stop-color="#e5e6e8" />
+          </linearGradient>
+        </defs>
+        <path d="M 110,0 A 230,200 0 0,0 380,175 L 380,110 A 165,135 0 0,1 185,0 Z" fill="url(#invArcGrad)" />
+      </svg>
+
       <div class="inv-body">
         <div class="inv-header">
           <div class="inv-company">
@@ -2938,13 +2975,14 @@ window.printInvoice = (id) => {
         <div class="inv-contact-wrap">
           <img src="img/invoice-contact.png" alt="satuatapkarya.com | 0896-3018-1621 | satuatapkarya@gmail.com" class="inv-contact-img">
         </div>
-        <svg class="inv-bottom-ribbon" viewBox="0 0 1000 52" preserveAspectRatio="none">
-          <rect x="0" y="0" width="1000" height="5" fill="#3b3e42" />
-          <polygon points="0,10 305,10 265,52 0,52" fill="#f01414" />
-          <polygon points="335,24 1000,24 1000,52 310,52" fill="#323539" />
-        </svg>
       </div>
     </div>`;
+}
+
+window.printInvoice = (id, projId) => {
+    renderInvoiceTemplate(id, projId);
+    const area = $("#print");
+    if (!area) return;
 
     document.body.classList.add("printing-inv");
     const imgs = Array.from(area.querySelectorAll("img"));
@@ -2960,10 +2998,21 @@ window.printInvoice = (id) => {
     ).then(() => {
         setTimeout(() => {
             window.print();
-            setTimeout(() => document.body.classList.remove("printing-inv"), 1000);
         }, 60);
     });
 };
+
+window.addEventListener("beforeprint", () => {
+    const area = $("#print");
+    if (area && !area.innerHTML.trim()) {
+        renderInvoiceTemplate(null, S.page === "pd" ? S.id : null);
+    }
+    document.body.classList.add("printing-inv");
+});
+
+window.addEventListener("afterprint", () => {
+    document.body.classList.remove("printing-inv");
+});
 
 window.payInvoice = async (id) => {
     const inv = D.invoice.find((x) => x.id == id);
@@ -3049,7 +3098,7 @@ function lap() {
           .join("")}
     </div>
     <button class="btn" onclick="csv('keu')">${I("download")}Export CSV</button>
-    <button class="btn btn-primary" onclick="window.print()">${I("print")}Cetak Laporan</button>`;
+    <button class="btn btn-primary" onclick="printInvoice()">${I("print")}Cetak Invoice</button>`;
 
     return (
         head("Laporan Arus Kas", pageDesc("lap"), actions) +
@@ -3171,7 +3220,7 @@ function plPage() {
             ? `<input type="month" value="${curMonth}" onchange="S.plMonth=this.value;render()" style="height:40px;padding:0 12px;border-radius:var(--r-sm);border:1.5px solid var(--line-2);background:var(--surface)">`
             : ""
     }
-    <button class="btn btn-primary" onclick="window.print()">${I("print")}Cetak Laba-Rugi</button>`;
+    <button class="btn btn-primary" onclick="printInvoice()">${I("print")}Cetak Invoice</button>`;
 
     return (
         head("Laporan Laba-Rugi (P&L)", pageDesc("pl"), actions) +
@@ -4286,6 +4335,10 @@ function render(keepFocus) {
             s.setSelectionRange(s.value.length, s.value.length);
         }
     }
+
+    try {
+        renderInvoiceTemplate(null, S.page === "pd" ? S.id : null);
+    } catch (err) {}
 
     try {
         charting();
