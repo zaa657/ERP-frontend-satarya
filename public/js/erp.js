@@ -323,8 +323,12 @@ const E = {
             ["tgl", "Tanggal terbit", "d"],
             ["jatuh", "Jatuh tempo", "d"],
             ["proj", "Proyek", "ref:proj"],
-            ["uraian", "Uraian tagihan (mis. Termin 2 — 40%)"],
-            ["nominal", "Nominal tagihan", "n"],
+            ["uraian", "Nama Produk / Pekerjaan"],
+            ["harga", "Harga Satuan (Rp)", "n"],
+            ["qty", "Jumlah (Qty)", "q"],
+            ["nominal", "Total Tagihan (Rp)", "n"],
+            ["estimasi", "Estimasi Hari (mis. 7 hari kerja)"],
+            ["spesifikasi", "Spesifikasi Pekerjaan (Opsional)", "txt"],
             ["status", "Status", ["Draft", "Terkirim", "Lunas"]],
         ],
     },
@@ -2154,6 +2158,7 @@ function listPage(k) {
     const actions = `
     <button class="btn" onclick="csv('${k}')">${I("download")}Export CSV</button>
     ${k === "proj" ? `<button class="btn" onclick="go('kanban')">${I("kanban")}Papan Kanban</button>` : ""}
+    ${k === "invoice" ? `<button class="btn" onclick="printInvoice()">${I("print")}Cetak Template Invoice</button>` : ""}
     <button class="btn btn-primary" onclick="openForm('${k}')">${I("plus")}Tambah ${e.s}</button>`;
 
     return (
@@ -2796,87 +2801,168 @@ function karyDetail() {
    15. CETAK INVOICE & PELUNASAN KE KAS
    --------------------------------------------------------------------- */
 window.printInvoice = (id) => {
-    const inv = D.invoice.find((x) => x.id == id);
-    if (!inv) return;
-    const p = D.proj.find((x) => x.id == inv.proj) || {};
+    const inv = id != null ? D.invoice.find((x) => x.id == id) : null;
+    const p = inv && inv.proj ? D.proj.find((x) => x.id == inv.proj) || {} : {};
     const area = $("#print");
+    if (!area) return;
+
+    const fmtSlashDate = (s) => {
+        if (!s) return "";
+        const parts = String(s).split("-");
+        if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        return s;
+    };
+
+    const rpPlain = (n) => {
+        const val = +n || 0;
+        return val > 0 ? "Rp" + Math.round(val).toLocaleString("id-ID") : "";
+    };
+
+    const klienName = inv ? p.klien || inv.klien || "" : "";
+    const tglStr = inv ? fmtSlashDate(inv.tgl) : "";
+    const alamatStr = inv ? p.alamat || inv.alamat || "" : "";
+    const noInv = inv ? inv.no || "" : "";
+
+    const hasProd = Boolean(inv && (inv.uraian || +inv.nominal > 0));
+    const prodName = hasProd ? inv.uraian || "" : "";
+    const qtyVal = hasProd ? +inv.qty || 1 : "";
+    const totalVal = hasProd ? +inv.nominal || 0 : 0;
+    const priceVal = hasProd
+        ? +inv.harga > 0
+            ? +inv.harga
+            : totalVal / (+inv.qty || 1)
+        : 0;
+
+    const specLines =
+        inv && inv.spesifikasi
+            ? String(inv.spesifikasi)
+                  .split(/\r?\n/)
+                  .map((s) => s.trim())
+                  .filter(Boolean)
+            : [];
+
+    const estimasiStr = inv && inv.estimasi ? inv.estimasi : "";
+
     area.innerHTML = `
     <div class="inv-doc">
-      <div class="inv-top">
-        <div class="inv-brand">
-          <img src="img/logo.png" alt="Logo Satarya">
-          <div>
-            <b>SATARYA</b>
-            <div style="font-size:12px;color:#6a7c90">General Contractor & Operational Services</div>
+      <div class="inv-body">
+        <div class="inv-header">
+          <div class="inv-company">
+            <img src="img/invoice-logo.png" alt="CV. Satu Atap Karya" class="inv-logo-img">
+            <div class="inv-comp-name">CV. SATU ATAP KARYA</div>
+            <div class="inv-comp-sub">Sub-kontraktor Spesialis</div>
+          </div>
+          <div class="inv-heading">
+            <div class="inv-h1">INVOICE</div>
+            <div class="inv-h1">PENAWARAN</div>
           </div>
         </div>
-        <div class="inv-title">
-          <h1>INVOICE</h1>
-          <div style="font-size:13px;font-weight:700">No. ${esc(inv.no)}</div>
+
+        <div class="inv-info-row">
+          <div class="inv-client">
+            <div class="inv-client-name">${esc(klienName)}</div>
+            <div class="inv-client-meta">${esc(tglStr)}</div>
+            <div class="inv-client-meta">${esc(alamatStr)}</div>
+          </div>
+          <div class="inv-num-box">
+            <div class="inv-num-lbl">INVOICE#</div>
+            <div class="inv-num-val">${esc(noInv)}</div>
+          </div>
+        </div>
+
+        <table class="inv-prod-tbl">
+          <thead>
+            <tr>
+              <th style="text-align:left">PRODUCTS</th>
+              <th style="text-align:center;width:160px">PRICE</th>
+              <th style="text-align:center;width:90px">QTY</th>
+              <th style="text-align:right;width:170px">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="inv-spacer-row"><td colspan="4"></td></tr>
+            <tr class="inv-row-alt">
+              <td>${esc(prodName)}</td>
+              <td style="text-align:center">${rpPlain(priceVal)}</td>
+              <td style="text-align:center">${esc(qtyVal)}</td>
+              <td style="text-align:right">${rpPlain(totalVal)}</td>
+            </tr>
+            <tr class="inv-row-white">
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr class="inv-row-alt">
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="inv-spec-wrap">
+          <div class="inv-spec-head">${specLines.length ? "SPESIFIKASI :" : ""}</div>
+          <div class="inv-spec-row inv-row-white">${specLines[0] ? `• ${esc(specLines[0].replace(/^[•\-*]\s*/, ""))}` : ""}</div>
+          <div class="inv-spec-row inv-row-alt">${specLines[1] ? `• ${esc(specLines[1].replace(/^[•\-*]\s*/, ""))}` : ""}</div>
+          ${specLines
+              .slice(2)
+              .map(
+                  (line, idx) =>
+                      `<div class="inv-spec-row ${idx % 2 === 0 ? "inv-row-white" : "inv-row-alt"}">• ${esc(line.replace(/^[•\-*]\s*/, ""))}</div>`,
+              )
+              .join("")}
+        </div>
+
+        <div class="inv-summary-row">
+          <div class="inv-pay-method">
+            <div class="inv-pay-title">METODE PEMBAYARAN</div>
+            <div class="inv-pay-line">BANK BRI ACCOUNT : 042001039964500</div>
+            <div class="inv-pay-line">NAME: MUHAMMAD APRIL CAHYADI</div>
+          </div>
+          <div class="inv-sub-box">
+            <div class="inv-sub-line">
+              <span>SUBTOTAL</span>
+              <span>${rpPlain(totalVal)}</span>
+            </div>
+            <div class="inv-sub-line">
+              <span>ESTIMASI HARI</span>
+              <span>${esc(estimasiStr)}</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="inv-meta">
-        <div>
-          <small>Ditujukan Kepada</small>
-          <div style="font-size:15px;font-weight:800;color:#0a2540">${esc(p.klien || "Klien")}</div>
-          <div>Proyek: <b>${esc(p.nama || "-")}</b></div>
-          <div style="color:#6a7c90;font-size:13px">${esc(p.alamat || "-")}</div>
-          <div style="color:#6a7c90;font-size:13px">${esc(p.kontak || "-")}</div>
+      <div class="inv-footer">
+        <div class="inv-contact-wrap">
+          <img src="img/invoice-contact.png" alt="satuatapkarya.com | 0896-3018-1621 | satuatapkarya@gmail.com" class="inv-contact-img">
         </div>
-        <div style="text-align:right">
-          <small>Informasi Tagihan</small>
-          <div>Tanggal Terbit: <b>${fmtD(inv.tgl)}</b></div>
-          <div>Jatuh Tempo: <b style="color:#d64545">${fmtD(inv.jatuh)}</b></div>
-          <div>Status: <b>${esc(inv.status || "Draft")}</b></div>
-        </div>
-      </div>
-
-      <table class="inv-table">
-        <thead>
-          <tr>
-            <th style="width:40px">No</th>
-            <th>Uraian Tagihan Pekerjaan</th>
-            <th style="text-align:right;width:180px">Nominal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>
-              <b>${esc(inv.uraian || "Pembayaran Termin Proyek")}</b>
-              <div style="font-size:12px;color:#6a7c90">Proyek: ${esc(p.nama || "-")}</div>
-            </td>
-            <td style="text-align:right;font-size:15px;font-weight:700">${rp(inv.nominal)}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="inv-total">
-        <div>
-          <span>Total Tagihan</span>
-          <span>${rp(inv.nominal)}</span>
-        </div>
-      </div>
-
-      <div class="inv-note">
-        <div>
-          <b>Instruksi Pembayaran:</b>
-          <div>Harap transfer ke rekening resmi Satarya:</div>
-          <div><b>Bank Mandiri: 123-00-9876543-1</b> a/n PT Satarya Operasional</div>
-          <div>Konfirmasi pembayaran dapat dikirimkan melalui WhatsApp keuangan.</div>
-        </div>
-        <div class="inv-sign">
-          <div>Hormat kami,</div>
-          <div style="height:50px"></div>
-          <b>( Bagian Keuangan )</b>
-        </div>
+        <svg class="inv-bottom-ribbon" viewBox="0 0 1000 52" preserveAspectRatio="none">
+          <rect x="0" y="0" width="1000" height="5" fill="#3b3e42" />
+          <polygon points="0,10 305,10 265,52 0,52" fill="#f01414" />
+          <polygon points="335,24 1000,24 1000,52 310,52" fill="#323539" />
+        </svg>
       </div>
     </div>`;
 
     document.body.classList.add("printing-inv");
-    window.print();
-    setTimeout(() => document.body.classList.remove("printing-inv"), 1000);
+    const imgs = Array.from(area.querySelectorAll("img"));
+    Promise.all(
+        imgs.map((img) =>
+            img.complete
+                ? Promise.resolve()
+                : new Promise((res) => {
+                      img.onload = res;
+                      img.onerror = res;
+                  }),
+        ),
+    ).then(() => {
+        setTimeout(() => {
+            window.print();
+            setTimeout(() => document.body.classList.remove("printing-inv"), 1000);
+        }, 60);
+    });
 };
 
 window.payInvoice = async (id) => {
@@ -3283,9 +3369,11 @@ function fld(f, v, pre) {
                 : k === "target" || k === "nilai"
                   ? "mis. 100.000.000"
                   : "mis. 5.000.000";
-        i = `<input type="text" inputmode="numeric" name="${k}" value="${esc(displayVal)}" placeholder="${ph}" data-nominal="1" autocomplete="off" required>`;
+        const isOptN = k === "harga" || k === "pot_kasbon" || k === "pot_rugi";
+        i = `<input type="text" inputmode="numeric" name="${k}" value="${esc(displayVal)}" placeholder="${ph}" data-nominal="1" autocomplete="off" ${isOptN ? "" : "required"}>`;
     } else if (t === "q") {
-        i = `<input type="number" step="any" min="0" name="${k}" value="${esc(val)}" placeholder="1" required>`;
+        const qVal = val != null && val !== "" ? val : 1;
+        i = `<input type="number" step="any" min="0" name="${k}" value="${esc(qVal)}" placeholder="1" required>`;
     } else if (t === "d") {
         i = `<input type="date" name="${k}" value="${esc(val || today())}" required>`;
     } else if (t === "m") {
@@ -3293,8 +3381,20 @@ function fld(f, v, pre) {
     } else {
         // Default invoice number auto-generator
         const defVal = k === "no" && !val ? nextInvNo() : val;
-        const ph = k === "pic" ? "mis. Budi Santoso (Narahubung / Sales Vendor)" : `Masukkan ${l.toLowerCase()}...`;
-        i = `<input name="${k}" value="${esc(defVal)}" placeholder="${ph}" ${k === "ket" || k === "kontak" || k === "link" || k === "alamat" || k === "pic" ? "" : "required"}>`;
+        const ph =
+            k === "pic"
+                ? "mis. Supriadi (Narahubung / Sales Vendor)"
+                : k === "estimasi"
+                  ? "mis. 7 hari kerja"
+                  : `Masukkan ${l.toLowerCase()}...`;
+        const isOptTxt =
+            k === "ket" ||
+            k === "kontak" ||
+            k === "link" ||
+            k === "alamat" ||
+            k === "pic" ||
+            k === "estimasi";
+        i = `<input name="${k}" value="${esc(defVal)}" placeholder="${ph}" ${isOptTxt ? "" : "required"}>`;
     }
 
     return `<label class="${isFull ? "full" : ""}"><span>${l}</span>${i}</label>`;
@@ -3437,6 +3537,21 @@ window.openForm = (k, id, pre) => {
         } else {
             updateGajiCalc(false);
         }
+    }
+
+    if (k === "invoice") {
+        const inpHarga = formEl.querySelector('[name="harga"]');
+        const inpQty = formEl.querySelector('[name="qty"]');
+        const inpNom = formEl.querySelector('[name="nominal"]');
+        const syncInvTotal = () => {
+            const h = inpHarga ? parseNominal(inpHarga.value) : 0;
+            const q = inpQty ? +inpQty.value || 1 : 1;
+            if (h > 0 && inpNom) {
+                inpNom.value = formatRibuan(Math.round(h * q));
+            }
+        };
+        if (inpHarga) inpHarga.addEventListener("input", syncInvTotal);
+        if (inpQty) inpQty.addEventListener("input", syncInvTotal);
     }
 
     formEl.onsubmit = async (ev) => {
