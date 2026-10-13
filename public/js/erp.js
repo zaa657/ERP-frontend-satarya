@@ -94,28 +94,57 @@ const E = {
             ["ket", "Keterangan / Supplier / Bagian"],
         ],
     },
-    vendor: {
-        t: "Vendor & Supplier",
-        s: "Vendor",
-        d: "Direktori pemasok material, penyewaan alat, subkon, dan jasa.",
+    supplier: {
+        t: "Supplier (Tempat Belanja)",
+        s: "Supplier",
+        d: "Direktori toko dan pemasok tempat belanja material, bahan bangunan, serta kebutuhan proyek.",
         f: [
-            ["nama", "Nama vendor / toko"],
+            ["nama", "Nama Supplier / Toko Belanja"],
             [
                 "kategori",
-                "Kategori",
+                "Kategori Belanja",
                 [
-                    "Material",
-                    "Alat & Sewa",
-                    "Jasa / Subkon",
-                    "Transportasi",
+                    "Material Bangunan",
+                    "Besi & Baja",
+                    "Aluminium & Kaca",
+                    "Cat & Finishing",
+                    "Alat Listrik & Sanitari",
+                    "Baut & Perkakas",
+                    "Perlengkapan Lapangan",
                     "Lainnya",
                 ],
             ],
-            ["pic", "Nama Kontak / Penanggung Jawab (PIC)"],
+            ["pic", "Nama Kontak / Sales Toko (PIC)"],
             ["kontak", "Telepon / WhatsApp"],
-            ["alamat", "Alamat"],
-            ["rating", "Penilaian", ["5", "4", "3", "2", "1"]],
-            ["ket", "Catatan (termin bayar, rekening, dll.)", "txt"],
+            ["alamat", "Alamat / Lokasi Toko"],
+            ["rating", "Penilaian Toko", ["5", "4", "3", "2", "1"]],
+            ["ket", "Catatan Belanja (Diskon, tempo pembayaran, no. rekening, dll.)", "txt"],
+        ],
+    },
+    vendor: {
+        t: "Vendor (Partner & Mitra)",
+        s: "Vendor / Mitra",
+        d: "Direktori partner rekanan, mitra kerja, sub-kontraktor spesialis, dan penyedia sewa alat.",
+        f: [
+            ["nama", "Nama Vendor / Perusahaan Mitra"],
+            [
+                "kategori",
+                "Bidang Kerjasama",
+                [
+                    "Sub-kontraktor Spesialis",
+                    "Sewa Alat & Mesin",
+                    "Jasa Konstruksi / Tukang",
+                    "Transportasi & Logistik",
+                    "Konsultan & Arsitek",
+                    "Mitra Kerjasama",
+                    "Lainnya",
+                ],
+            ],
+            ["pic", "Nama PIC / Penanggung Jawab Mitra"],
+            ["kontak", "Telepon / WhatsApp"],
+            ["alamat", "Alamat Kantor / Workshop"],
+            ["rating", "Penilaian Kinerja Mitra", ["5", "4", "3", "2", "1"]],
+            ["ket", "Catatan Kerjasama (Perjanjian, no. rekening bank, lingkup kerja, dll.)", "txt"],
         ],
     },
     sales: {
@@ -356,7 +385,8 @@ const ICONS = {
     inv: '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>',
     mov: '<path d="m17 1 4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
     form: '<rect x="6" y="4" width="12" height="18" rx="2"/><path d="M9 2h6v4H9zM9 12h6M9 16h4"/>',
-    vendor: '<path d="M1 4h13v12H1z"/><path d="M14 9h4l4 4v3h-8"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="17.5" cy="18.5" r="2"/>',
+    supplier: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+    vendor: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
     karyawan:
         '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
     gaji: '<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/>',
@@ -401,6 +431,8 @@ const ICONS = {
     shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
     lock: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
     file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>',
+    filePdf: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M10 12H8v6h2a1.5 1.5 0 0 0 1.5-1.5v-3A1.5 1.5 0 0 0 10 12z"/>',
+    image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/>',
     link: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
     bolt: '<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>',
 };
@@ -458,7 +490,8 @@ const NAV = [
             ["supply", "Stok Perlengkapan", "Bahan habis pakai & stok minimum"],
             ["mov", "Mutasi Stok", "Stok masuk & pemakaian proyek"],
             ["form", "Formulir Permintaan", "Pengajuan & persetujuan barang"],
-            ["vendor", "Vendor & Supplier", "Direktori pemasok & penilaian", 1],
+            ["supplier", "Supplier", "Tempat belanja material & toko kebutuhan", 1],
+            ["vendor", "Vendor / Mitra", "Partner rekanan, subkon & sewa alat"],
         ],
     },
     {
@@ -526,6 +559,35 @@ try {
 }
 const normalize = () => {
     Object.keys(E).forEach((k) => (D[k] = Array.isArray(D[k]) ? D[k] : []));
+    if (!D.supplier) D.supplier = [];
+
+    // Pisahkan otomatis toko/material belanja dari vendor jika D.supplier masih kosong
+    if (Array.isArray(D.vendor) && D.vendor.length > 0 && D.supplier.length === 0) {
+        const toMove = [];
+        D.vendor = D.vendor.filter((v) => {
+            const kat = (v.kategori || "").toLowerCase();
+            const nm = (v.nama || "").toLowerCase();
+            if (
+                kat.includes("material") ||
+                nm.includes("toko") ||
+                nm.includes("tb.") ||
+                nm.includes("depo") ||
+                nm.includes("supplier") ||
+                nm.includes("bangunan")
+            ) {
+                toMove.push({
+                    ...v,
+                    kategori: "Material Bangunan",
+                });
+                return false;
+            }
+            return true;
+        });
+        if (toMove.length > 0) {
+            D.supplier.push(...toMove);
+        }
+    }
+
     // Aktivitas Terbaru hanya di memori sementara (tidak disimpan di localhost/localStorage & otomatis terhapus saat refresh)
     D.log = [];
     try {
@@ -1701,20 +1763,52 @@ function topStats(k) {
                 D.mov.filter((m) => m.tipe === "keluar").length,
             ],
         ];
+    if (k === "supplier")
+        return [
+            ["Total Supplier", (D.supplier || []).length],
+            [
+                "Toko Material",
+                (D.supplier || []).filter((v) =>
+                    (v.kategori || "").toLowerCase().includes("material"),
+                ).length,
+            ],
+            [
+                "Besi & Baja",
+                (D.supplier || []).filter((v) =>
+                    (v.kategori || "").toLowerCase().includes("besi"),
+                ).length,
+            ],
+            [
+                "Aluminium & Kaca",
+                (D.supplier || []).filter((v) =>
+                    (v.kategori || "").toLowerCase().includes("aluminium"),
+                ).length,
+            ],
+        ];
     if (k === "vendor")
         return [
-            ["Total Vendor", D.vendor.length],
+            ["Total Mitra / Vendor", (D.vendor || []).length],
             [
-                "Vendor Material",
-                D.vendor.filter((v) => v.kategori === "Material").length,
+                "Sub-kontraktor",
+                (D.vendor || []).filter(
+                    (v) =>
+                        (v.kategori || "").toLowerCase().includes("sub-kontraktor") ||
+                        (v.kategori || "").toLowerCase().includes("subkon"),
+                ).length,
             ],
             [
-                "Alat & Sewa",
-                D.vendor.filter((v) => v.kategori === "Alat & Sewa").length,
+                "Sewa Alat & Mesin",
+                (D.vendor || []).filter((v) =>
+                    (v.kategori || "").toLowerCase().includes("alat"),
+                ).length,
             ],
             [
-                "Jasa / Subkon",
-                D.vendor.filter((v) => v.kategori === "Jasa / Subkon").length,
+                "Jasa Konstruksi",
+                (D.vendor || []).filter(
+                    (v) =>
+                        (v.kategori || "").toLowerCase().includes("jasa") ||
+                        (v.kategori || "").toLowerCase().includes("tukang"),
+                ).length,
             ],
         ];
     if (k === "proj")
@@ -1983,7 +2077,7 @@ function extra(k) {
                 },
             ],
         ];
-    if (k === "vendor")
+    if (k === "vendor" || k === "supplier")
         return [
             ["Penilaian", (r) => stars(r.rating)],
             [
@@ -2020,6 +2114,14 @@ function extra(k) {
                     r._src === "keu"
                         ? '<span class="badge ok plain">Kas Harian</span>'
                         : '<span class="badge warn plain">Input Langsung</span>',
+            ],
+        ];
+    if (k === "keu")
+        return [
+            [
+                "Bukti Kas",
+                (r) =>
+                    `<button class="btn btn-sm btn-soft" onclick="openBuktiKasModal(${r.id})" title="Cetak atau Ekspor Bukti Kas (PDF/JPG)">${I("filePdf")} Bukti / Kwitansi</button>`,
             ],
         ];
     return [];
@@ -2159,6 +2261,12 @@ function listPage(k) {
         .join("");
 
     const actions = `
+    ${
+        k === "keu"
+            ? `<button class="btn btn-soft" onclick="openExportKeuModal('pdf')">${I("filePdf")}Ekspor PDF</button>
+    <button class="btn btn-soft" onclick="openExportKeuModal('jpg')">${I("image")}Ekspor JPG</button>`
+            : ""
+    }
     <button class="btn" onclick="csv('${k}')">${I("download")}Export CSV</button>
     ${k === "proj" ? `<button class="btn" onclick="go('kanban')">${I("kanban")}Papan Kanban</button>` : ""}
     ${k === "invoice" ? `<button class="btn" onclick="printInvoice()">${I("print")}Cetak Template Invoice</button>` : ""}
@@ -3051,6 +3159,584 @@ window.payInvoice = async (id) => {
 };
 
 /* ---------------------------------------------------------------------
+   15B. EKSPOR DOKUMEN KAS HARIAN (PDF & JPG)
+   --------------------------------------------------------------------- */
+function terbilang(n) {
+    n = Math.abs(Math.round(n));
+    if (n === 0) return "Nol";
+    const bil = [
+        "", "Satu", "Dua", "Tiga", "Empat", "Lima",
+        "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"
+    ];
+    if (n < 12) return bil[n];
+    if (n < 20) return (terbilang(n - 10) + " Belas").trim();
+    if (n < 100) return (terbilang(Math.floor(n / 10)) + " Puluh " + terbilang(n % 10)).trim();
+    if (n < 200) return ("Seratus " + terbilang(n - 100)).trim();
+    if (n < 1000) return (terbilang(Math.floor(n / 100)) + " Ratus " + terbilang(n % 100)).trim();
+    if (n < 2000) return ("Seribu " + terbilang(n - 1000)).trim();
+    if (n < 1000000) return (terbilang(Math.floor(n / 1000)) + " Ribu " + terbilang(n % 1000)).trim();
+    if (n < 1000000000) return (terbilang(Math.floor(n / 1000000)) + " Juta " + terbilang(n % 1000000)).trim();
+    if (n < 1000000000000) return (terbilang(Math.floor(n / 1000000000)) + " Miliar " + terbilang(n % 1000000000)).trim();
+    return (terbilang(Math.floor(n / 1000000000000)) + " Triliun " + terbilang(n % 1000000000000)).trim();
+}
+
+window.printElement = (node) => {
+    const area = $("#print");
+    if (!area) return;
+    area.innerHTML = node.outerHTML;
+    document.body.classList.add("printing-inv");
+    const imgs = Array.from(area.querySelectorAll("img"));
+    Promise.all(
+        imgs.map((img) =>
+            img.complete
+                ? Promise.resolve()
+                : new Promise((res) => { img.onload = res; img.onerror = res; })
+        )
+    ).then(() => {
+        setTimeout(() => {
+            window.print();
+        }, 60);
+    });
+};
+
+window.exportNodeToJpg = async (node, filename) => {
+    try {
+        toast("Sedang memproses ekspor gambar JPG...", "info");
+        if (typeof html2canvas === "undefined") {
+            const s = document.createElement("script");
+            s.src = "js/html2canvas.min.js";
+            await new Promise((res, rej) => { s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+        }
+        const canvas = await html2canvas(node, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: "#ffffff",
+            logging: false,
+        });
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.95);
+        const a = document.createElement("a");
+        a.download = (filename || "Laporan_Kas_Harian") + ".jpg";
+        a.href = dataUrl;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        toast("Dokumen JPG berhasil diunduh!", "ok");
+    } catch (err) {
+        console.error("Export JPG error:", err);
+        toast("Gagal mengekspor gambar JPG: " + err.message, "bad");
+    }
+};
+
+window.exportNodeToPdf = async (node, filename, orientation = "p") => {
+    try {
+        toast("Sedang memproses ekspor dokumen PDF...", "info");
+        if (typeof html2canvas === "undefined") {
+            const s1 = document.createElement("script");
+            s1.src = "js/html2canvas.min.js";
+            await new Promise((res, rej) => { s1.onload = res; s1.onerror = rej; document.head.appendChild(s1); });
+        }
+        if (typeof window.jspdf === "undefined" && typeof window.jsPDF === "undefined") {
+            const s2 = document.createElement("script");
+            s2.src = "js/jspdf.umd.min.js";
+            await new Promise((res, rej) => { s2.onload = res; s2.onerror = rej; document.head.appendChild(s2); });
+        }
+        const canvas = await html2canvas(node, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: "#ffffff",
+            logging: false,
+        });
+        const imgData = canvas.toDataURL("image/jpeg", 0.95);
+
+        const jsPDFClass = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
+        if (!jsPDFClass) {
+            throw new Error("Library PDF tidak dapat diinisialisasi.");
+        }
+        const pdf = new jsPDFClass(orientation, "mm", "a4");
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const margin = 10;
+        const printableWidth = pageWidth - margin * 2;
+        const imgHeight = (canvas.height * printableWidth) / canvas.width;
+
+        if (imgHeight <= pageHeight - margin * 2) {
+            pdf.addImage(imgData, "JPEG", margin, margin, printableWidth, imgHeight);
+        } else {
+            let heightLeft = imgHeight;
+            let sY = 0;
+            const sliceCanvasHeight = (canvas.width * (pageHeight - margin * 2)) / printableWidth;
+            let pageNum = 0;
+
+            while (heightLeft > 0) {
+                const pageCanvas = document.createElement("canvas");
+                pageCanvas.width = canvas.width;
+                pageCanvas.height = Math.min(sliceCanvasHeight, canvas.height - sY);
+                const ctx = pageCanvas.getContext("2d");
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+                ctx.drawImage(
+                    canvas,
+                    0,
+                    sY,
+                    canvas.width,
+                    pageCanvas.height,
+                    0,
+                    0,
+                    canvas.width,
+                    pageCanvas.height
+                );
+
+                const pageData = pageCanvas.toDataURL("image/jpeg", 0.95);
+                if (pageNum > 0) pdf.addPage();
+                const renderHeight = (pageCanvas.height * printableWidth) / canvas.width;
+                pdf.addImage(pageData, "JPEG", margin, margin, printableWidth, renderHeight);
+
+                sY += sliceCanvasHeight;
+                heightLeft -= (pageHeight - margin * 2);
+                pageNum++;
+            }
+        }
+
+        pdf.save((filename || "Laporan_Kas_Harian") + ".pdf");
+        toast("Dokumen PDF berhasil diunduh!", "ok");
+    } catch (err) {
+        console.error("Export PDF error:", err);
+        toast("Gagal mengekspor dokumen PDF: " + err.message, "bad");
+    }
+};
+
+function renderKeuDocHtml(filter = {}) {
+    let list = [...(D.keu || [])];
+    if (filter.proj) {
+        list = list.filter((x) => x.proj == filter.proj);
+    }
+    if (filter.tipe && filter.tipe !== "all") {
+        list = list.filter((x) => x.tipe === filter.tipe);
+    }
+    if (filter.bulan) {
+        list = list.filter((x) => String(x.tgl || "").startsWith(filter.bulan));
+    }
+    if (filter.q) {
+        const q = filter.q.toLowerCase();
+        list = list.filter((x) =>
+            (x.ket || "").toLowerCase().includes(q) ||
+            (x.kategori || "").toLowerCase().includes(q) ||
+            (x.proj ? nm("proj", x.proj).toLowerCase().includes(q) : false)
+        );
+    }
+    list.sort((a, b) => (a.tgl || "").localeCompare(b.tgl || ""));
+
+    let running = 0;
+    let totalIn = 0;
+    let totalOut = 0;
+    const rows = list.map((x, idx) => {
+        const isMasuk = x.tipe === "masuk";
+        const nominal = +x.nominal || 0;
+        if (isMasuk) {
+            running += nominal;
+            totalIn += nominal;
+        } else {
+            running -= nominal;
+            totalOut += nominal;
+        }
+        return `
+            <tr>
+                <td class="cen">${idx + 1}</td>
+                <td><b>${fmtD(x.tgl)}</b></td>
+                <td><span style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;background:${isMasuk ? "#dcfce7;color:#166534" : "#fee2e2;color:#991b1b"}">${isMasuk ? "KAS MASUK" : "KAS KELUAR"}</span></td>
+                <td>${esc(x.kategori || "-")}</td>
+                <td>${esc(x.proj ? nm("proj", x.proj) : "Kas Operasional Umum")}</td>
+                <td>${esc(x.ket || "-")}</td>
+                <td class="num" style="color:#166534;font-weight:600">${isMasuk ? "+" + rp(nominal) : "-"}</td>
+                <td class="num" style="color:#991b1b;font-weight:600">${!isMasuk ? "-" + rp(nominal) : "-"}</td>
+                <td class="num" style="font-weight:700;color:${running < 0 ? "#991b1b" : "#0f172a"}">${rp(running)}</td>
+            </tr>
+        `;
+    }).join("");
+
+    const netPeriod = totalIn - totalOut;
+    const periodLabel = filter.bulan ? fmtM(filter.bulan) : "Semua Periode";
+    const docNo = "BKH/" + today().replace(/-/g, "") + "/" + String(list.length).padStart(3, "0");
+
+    return `
+    <div id="keuDocContent" class="doc-export-preview">
+        <div class="doc-header-kop">
+            <div class="doc-kop-brand">
+                <img src="img/logo.png" alt="Satarya" class="doc-kop-logo">
+                <div>
+                    <h1 class="doc-kop-title">SATARYA ERP</h1>
+                    <div class="doc-kop-sub">Sistem Operasional Manajemen Kontraktor & Konstruksi</div>
+                </div>
+            </div>
+            <div class="doc-kop-meta">
+                <div><b>No. Dokumen:</b> ${docNo}</div>
+                <div><b>Tanggal Cetak:</b> ${fmtD(today())}</div>
+                <div><b>Status:</b> Terverifikasi Sistem</div>
+            </div>
+        </div>
+
+        <div class="doc-title-block">
+            <h2 class="doc-main-title">LAPORAN BUKU KAS HARIAN</h2>
+            <div class="doc-sub-title">Periode: ${periodLabel} ${filter.proj ? "· Proyek: " + esc(nm("proj", filter.proj)) : ""}</div>
+        </div>
+
+        <div class="doc-summary-cards">
+            <div class="doc-summary-card in">
+                <small>Total Pemasukan</small>
+                <b>+${rp(totalIn)}</b>
+            </div>
+            <div class="doc-summary-card out">
+                <small>Total Pengeluaran</small>
+                <b>-${rp(totalOut)}</b>
+            </div>
+            <div class="doc-summary-card net">
+                <small>Surplus / Defisit</small>
+                <b style="color:${netPeriod < 0 ? "#991b1b" : "#0369a1"}">${rp(netPeriod)}</b>
+            </div>
+            <div class="doc-summary-card">
+                <small>Total Transaksi</small>
+                <b>${list.length} Catatan</b>
+            </div>
+        </div>
+
+        <table class="doc-table">
+            <thead>
+                <tr>
+                    <th class="cen" style="width:36px">No</th>
+                    <th style="width:85px">Tanggal</th>
+                    <th style="width:90px">Jenis</th>
+                    <th style="width:110px">Kategori</th>
+                    <th style="width:120px">Proyek</th>
+                    <th>Uraian Transaksi</th>
+                    <th class="num" style="width:95px">Masuk</th>
+                    <th class="num" style="width:95px">Keluar</th>
+                    <th class="num" style="width:105px">Saldo</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${rows || '<tr><td colspan="9" style="text-align:center;padding:24px;color:#64748b">Tidak ada catatan transaksi pada filter periode ini.</td></tr>'}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="6" style="text-align:right">TOTAL PERIODE INI</th>
+                    <th class="num" style="color:#166534">+${rp(totalIn)}</th>
+                    <th class="num" style="color:#991b1b">-${rp(totalOut)}</th>
+                    <th class="num" style="color:${netPeriod < 0 ? "#991b1b" : "#0f172a"}">${rp(netPeriod)}</th>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="doc-sign-grid">
+            <div class="doc-sign-box">
+                <div class="doc-sign-role">Dibuat Oleh (Admin/Kasir):</div>
+                <div class="doc-sign-name">${esc(ME ? ME.n : "Admin Finansial")}</div>
+            </div>
+            <div class="doc-sign-box">
+                <div class="doc-sign-role">Diperiksa Oleh:</div>
+                <div class="doc-sign-name">( Finance Manager )</div>
+            </div>
+            <div class="doc-sign-box">
+                <div class="doc-sign-role">Mengetahui & Menyetujui:</div>
+                <div class="doc-sign-name">( Owner / Direktur )</div>
+            </div>
+        </div>
+    </div>
+    `;
+}
+
+window.openExportKeuModal = (autoFormat) => {
+    let docDlg = document.getElementById("docDlg");
+    if (!docDlg) {
+        docDlg = document.createElement("dialog");
+        docDlg.id = "docDlg";
+        docDlg.className = "sheet";
+        docDlg.style.maxWidth = "960px";
+        docDlg.style.width = "95vw";
+        docDlg.onclick = (e) => { if (e.target === docDlg) docDlg.close(); };
+        document.body.appendChild(docDlg);
+    }
+
+    const curMonth = today().slice(0, 7);
+    let filter = { bulan: curMonth, tipe: "all", proj: "", q: "" };
+
+    const updatePreview = () => {
+        const previewContainer = docDlg.querySelector("#exportPreviewWrap");
+        if (previewContainer) {
+            previewContainer.innerHTML = renderKeuDocHtml(filter);
+        }
+    };
+
+    docDlg.innerHTML = `
+    <div class="export-modal-wrap">
+        <div class="sheet-h" style="padding-bottom:12px;border-bottom:1px solid var(--border)">
+            <div style="display:flex;align-items:center;gap:12px">
+                <span class="mega-ico" style="width:42px;height:42px;background:var(--primary-subtle);color:var(--primary)">${I("filePdf")}</span>
+                <div>
+                    <h2 style="font-size:17px;font-weight:800;color:var(--text);margin:0">Ekspor Dokumen Kas Harian</h2>
+                    <p style="font-size:12px;color:var(--muted);margin:2px 0 0">Unduh laporan resmi kas harian dalam format dokumen PDF atau gambar resolusi tinggi JPG.</p>
+                </div>
+            </div>
+            <button class="icon-btn" onclick="document.getElementById('docDlg').close()">${I("x")}</button>
+        </div>
+
+        <div class="export-ctrl-bar">
+            <div class="export-ctrl-left">
+                <label style="font-size:12px;font-weight:700;color:var(--text-2);display:inline-flex;align-items:center;gap:6px">
+                    Bulan:
+                    <input type="month" value="${curMonth}" id="exportFilterMonth" style="height:34px;padding:0 8px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface)">
+                </label>
+
+                <label style="font-size:12px;font-weight:700;color:var(--text-2);display:inline-flex;align-items:center;gap:6px">
+                    Jenis:
+                    <select id="exportFilterType" style="height:34px;padding:0 8px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface)">
+                        <option value="all">Semua (Masuk & Keluar)</option>
+                        <option value="masuk">Kas Masuk Saja</option>
+                        <option value="keluar">Kas Keluar Saja</option>
+                    </select>
+                </label>
+
+                <label style="font-size:12px;font-weight:700;color:var(--text-2);display:inline-flex;align-items:center;gap:6px">
+                    Proyek:
+                    <select id="exportFilterProj" style="height:34px;padding:0 8px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface)">
+                        <option value="">Semua Proyek & Operasional</option>
+                        ${(D.proj || []).map((p) => `<option value="${p.id}">${esc(p.nama)}</option>`).join("")}
+                    </select>
+                </label>
+            </div>
+
+            <div class="export-ctrl-right">
+                <button class="btn btn-primary" id="btnDownloadPdf" style="gap:6px">
+                    ${I("filePdf")} Unduh PDF (.pdf)
+                </button>
+                <button class="btn btn-soft" id="btnDownloadJpg" style="gap:6px">
+                    ${I("image")} Unduh JPG (.jpg)
+                </button>
+                <button class="btn btn-ghost" id="btnPrintDoc" style="gap:6px">
+                    ${I("print")} Cetak
+                </button>
+            </div>
+        </div>
+
+        <div class="export-scroll-area">
+            <div id="exportPreviewWrap">
+                ${renderKeuDocHtml(filter)}
+            </div>
+        </div>
+    </div>
+    `;
+
+    docDlg.showModal();
+
+    const monthInput = docDlg.querySelector("#exportFilterMonth");
+    const typeSelect = docDlg.querySelector("#exportFilterType");
+    const projSelect = docDlg.querySelector("#exportFilterProj");
+
+    monthInput.onchange = () => { filter.bulan = monthInput.value; updatePreview(); };
+    typeSelect.onchange = () => { filter.tipe = typeSelect.value; updatePreview(); };
+    projSelect.onchange = () => { filter.proj = projSelect.value; updatePreview(); };
+
+    const getFilename = () => {
+        const periodStr = filter.bulan ? filter.bulan : today();
+        return `Laporan_Kas_Harian_${periodStr}`;
+    };
+
+    docDlg.querySelector("#btnDownloadPdf").onclick = () => {
+        const target = docDlg.querySelector("#keuDocContent");
+        exportNodeToPdf(target, getFilename());
+    };
+
+    docDlg.querySelector("#btnDownloadJpg").onclick = () => {
+        const target = docDlg.querySelector("#keuDocContent");
+        exportNodeToJpg(target, getFilename());
+    };
+
+    docDlg.querySelector("#btnPrintDoc").onclick = () => {
+        const target = docDlg.querySelector("#keuDocContent");
+        printElement(target);
+    };
+
+    if (autoFormat === "pdf") {
+        setTimeout(() => {
+            const target = docDlg.querySelector("#keuDocContent");
+            exportNodeToPdf(target, getFilename());
+        }, 350);
+    } else if (autoFormat === "jpg") {
+        setTimeout(() => {
+            const target = docDlg.querySelector("#keuDocContent");
+            exportNodeToJpg(target, getFilename());
+        }, 350);
+    }
+};
+
+function renderBuktiKasHtml(id) {
+    const r = (D.keu || []).find((x) => x.id == id);
+    if (!r) return "<div>Data transaksi tidak ditemukan.</div>";
+    const isMasuk = r.tipe === "masuk";
+    const voucherType = isMasuk ? "BUKTI KAS MASUK (BKM)" : "BUKTI KAS KELUAR (BKK)";
+    const voucherNo = (isMasuk ? "BKM" : "BKK") + "-" + (r.tgl || today()).replace(/-/g, "").slice(2) + "-" + String(r.id).slice(-4);
+    const nominal = +r.nominal || 0;
+    const terbilangStr = terbilang(nominal) + " Rupiah";
+
+    return `
+    <div id="buktiKasContent" class="bkm-voucher">
+        <div class="bkm-head">
+            <div style="display:flex;align-items:center;gap:12px">
+                <img src="img/logo.png" alt="Satarya" style="width:44px;height:44px;object-fit:contain">
+                <div>
+                    <div style="font-size:18px;font-weight:900;color:#1b4310;line-height:1.1">SATARYA ERP</div>
+                    <div style="font-size:11px;color:#64748b;font-weight:600">Kontraktor & Manajemen Konstruksi</div>
+                </div>
+            </div>
+            <div style="text-align:right;font-size:11px;color:#64748b">
+                <div><b>Tanggal:</b> ${fmtD(r.tgl)}</div>
+                <div><b>No. Bukti:</b> <span style="font-family:monospace;font-weight:700;color:#0f172a">${voucherNo}</span></div>
+            </div>
+        </div>
+
+        <div class="bkm-title-box">
+            <span class="bkm-title-badge ${isMasuk ? 'in' : 'out'}">${voucherType}</span>
+            <div class="bkm-no">Dokumen Transaksi Keuangan Resmi</div>
+        </div>
+
+        <div class="bkm-grid">
+            <div class="bkm-lbl">${isMasuk ? "Diterima Dari" : "Dibayarkan Kepada"}</div>
+            <div class="bkm-val">: ${esc(r.ket || "-")}</div>
+
+            <div class="bkm-lbl">Kategori Transaksi</div>
+            <div class="bkm-val">: <span style="display:inline-block;padding:2px 8px;border-radius:4px;background:#f1f5f9;border:1px solid #cbd5e1;font-size:11.5px">${esc(r.kategori || "-")}</span></div>
+
+            <div class="bkm-lbl">Proyek Terkait</div>
+            <div class="bkm-val">: ${esc(r.proj ? nm("proj", r.proj) : "Kas Operasional Umum")}</div>
+
+            <div class="bkm-lbl">Uraian / Keterangan</div>
+            <div class="bkm-val">: ${esc(r.ket || "-")}</div>
+        </div>
+
+        <div class="bkm-amount-box">
+            <div>
+                <small style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.04em">Jumlah Nominal Uang</small>
+                <div class="bkm-amount-val" style="color:${isMasuk ? '#166534' : '#991b1b'}">${rp(nominal)}</div>
+            </div>
+            <div style="font-size:11px;color:#64748b;text-align:right">
+                Status: <b>LUNAS / SELESAI</b><br>
+                Kas: <b>Buku Kas Harian</b>
+            </div>
+        </div>
+
+        <div class="bkm-terbilang-box">
+            <div style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px">Terbilang:</div>
+            <b>## ${terbilangStr} ##</b>
+        </div>
+
+        <div class="bkm-sign-grid">
+            <div class="bkm-sign-box">
+                <div class="bkm-sign-role">Dibukukan Oleh:</div>
+                <div class="bkm-sign-name">${esc(ME ? ME.n : "Kasir Operasional")}</div>
+            </div>
+            <div class="bkm-sign-box">
+                <div class="bkm-sign-role">${isMasuk ? "Penyetor / Dari" : "Penerima Uang"}:</div>
+                <div class="bkm-sign-name">( ................................... )</div>
+            </div>
+            <div class="bkm-sign-box">
+                <div class="bkm-sign-role">Mengetahui / Menyetujui:</div>
+                <div class="bkm-sign-name">( Pimpinan / Owner )</div>
+            </div>
+        </div>
+    </div>
+    `;
+}
+
+window.openBuktiKasModal = (id, autoFormat) => {
+    let docDlg = document.getElementById("docDlg");
+    if (!docDlg) {
+        docDlg = document.createElement("dialog");
+        docDlg.id = "docDlg";
+        docDlg.className = "sheet";
+        docDlg.style.maxWidth = "800px";
+        docDlg.style.width = "95vw";
+        docDlg.onclick = (e) => { if (e.target === docDlg) docDlg.close(); };
+        document.body.appendChild(docDlg);
+    }
+
+    const r = (D.keu || []).find((x) => x.id == id);
+    if (!r) {
+        toast("Data transaksi tidak ditemukan.", "bad");
+        return;
+    }
+
+    const filename = (r.tipe === "masuk" ? "Bukti_Kas_Masuk" : "Bukti_Kas_Keluar") + "_" + r.id;
+
+    docDlg.innerHTML = `
+    <div class="export-modal-wrap" style="max-width:760px">
+        <div class="sheet-h" style="padding-bottom:12px;border-bottom:1px solid var(--border)">
+            <div style="display:flex;align-items:center;gap:12px">
+                <span class="mega-ico" style="width:42px;height:42px;background:var(--primary-subtle);color:var(--primary)">${I("filePdf")}</span>
+                <div>
+                    <h2 style="font-size:17px;font-weight:800;color:var(--text);margin:0">Ekspor Bukti Kas / Kwitansi</h2>
+                    <p style="font-size:12px;color:var(--muted);margin:2px 0 0">Kwitansi resmi ${r.tipe === "masuk" ? "Bukti Kas Masuk (BKM)" : "Bukti Kas Keluar (BKK)"} senilai ${rp(r.nominal)}.</p>
+                </div>
+            </div>
+            <button class="icon-btn" onclick="document.getElementById('docDlg').close()">${I("x")}</button>
+        </div>
+
+        <div class="export-ctrl-bar">
+            <div style="font-size:12.5px;font-weight:700;color:var(--text)">
+                Pilih format unduhan dokumen:
+            </div>
+            <div class="export-ctrl-right">
+                <button class="btn btn-primary" id="btnBkmPdf" style="gap:6px">
+                    ${I("filePdf")} Unduh PDF (.pdf)
+                </button>
+                <button class="btn btn-soft" id="btnBkmJpg" style="gap:6px">
+                    ${I("image")} Unduh JPG (.jpg)
+                </button>
+                <button class="btn btn-ghost" id="btnBkmPrint" style="gap:6px">
+                    ${I("print")} Cetak Bukti
+                </button>
+            </div>
+        </div>
+
+        <div class="export-scroll-area">
+            <div id="buktiKasWrap">
+                ${renderBuktiKasHtml(id)}
+            </div>
+        </div>
+    </div>
+    `;
+
+    docDlg.showModal();
+
+    docDlg.querySelector("#btnBkmPdf").onclick = () => {
+        const target = docDlg.querySelector("#buktiKasContent");
+        exportNodeToPdf(target, filename);
+    };
+
+    docDlg.querySelector("#btnBkmJpg").onclick = () => {
+        const target = docDlg.querySelector("#buktiKasContent");
+        exportNodeToJpg(target, filename);
+    };
+
+    docDlg.querySelector("#btnBkmPrint").onclick = () => {
+        const target = docDlg.querySelector("#buktiKasContent");
+        printElement(target);
+    };
+
+    if (autoFormat === "pdf") {
+        setTimeout(() => {
+            const target = docDlg.querySelector("#buktiKasContent");
+            exportNodeToPdf(target, filename);
+        }, 350);
+    } else if (autoFormat === "jpg") {
+        setTimeout(() => {
+            const target = docDlg.querySelector("#buktiKasContent");
+            exportNodeToJpg(target, filename);
+        }, 350);
+    }
+};
+
+/* ---------------------------------------------------------------------
    16. LAPORAN ARUS KAS & LABA-RUGI (P&L)
    --------------------------------------------------------------------- */
 function lap() {
@@ -3097,6 +3783,8 @@ function lap() {
           )
           .join("")}
     </div>
+    <button class="btn btn-soft" onclick="openExportKeuModal('pdf')">${I("filePdf")}Ekspor PDF</button>
+    <button class="btn btn-soft" onclick="openExportKeuModal('jpg')">${I("image")}Ekspor JPG</button>
     <button class="btn" onclick="csv('keu')">${I("download")}Export CSV</button>
     <button class="btn btn-primary" onclick="printInvoice()">${I("print")}Cetak Invoice</button>`;
 
@@ -3430,12 +4118,21 @@ function fld(f, v, pre) {
     } else {
         // Default invoice number auto-generator
         const defVal = k === "no" && !val ? nextInvNo() : val;
+        const entityKey = pre && pre._entity;
         const ph =
             k === "pic"
-                ? "mis. Supriadi (Narahubung / Sales Vendor)"
-                : k === "estimasi"
-                  ? "mis. 7 hari kerja"
-                  : `Masukkan ${l.toLowerCase()}...`;
+                ? entityKey === "supplier"
+                    ? "mis. Ko Asen (Sales / Kasir Toko)"
+                    : entityKey === "vendor"
+                      ? "mis. Supriadi (PIC / Penanggung Jawab Mitra)"
+                      : "mis. Ko Asen (Sales Toko) / Supriadi (PIC Mitra)"
+                : k === "nama" && entityKey === "supplier"
+                  ? "mis. TB. Sinar Abadi (Toko Bangunan)"
+                  : k === "nama" && entityKey === "vendor"
+                    ? "mis. PT. Sinergi Konstruksi Mandiri"
+                    : k === "estimasi"
+                      ? "mis. 7 hari kerja"
+                      : `Masukkan ${l.toLowerCase()}...`;
         const isOptTxt =
             k === "ket" ||
             k === "kontak" ||
@@ -3455,7 +4152,7 @@ window.openForm = (k, id, pre) => {
     const r = id ? (D[k] || []).find((x) => x.id == id) : null;
     const d = $("#dlg");
     if (!d) return;
-    const ctx = r || pre || {};
+    const ctx = { ...(r || pre || {}), _entity: k };
 
     d.onclick = (ev) => {
         if (ev.target === d) d.close();
