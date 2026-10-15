@@ -1,63 +1,92 @@
 <!doctype html>
 <html lang="id" data-theme="light">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <meta name="theme-color" content="#1B4310" />
-    <title>Satarya ERP — Integrated Workspace</title>
-    <link rel="icon" type="image/png" href="img/logo.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <script>
-      // Terapkan tema sebelum render agar tidak berkedip
-      (function () {
-        try {
-          var t = localStorage.getItem("satarya_theme");
-          if (!t) t = "light";
-          document.documentElement.setAttribute("data-theme", t);
-        } catch (e) {}
-      })();
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-    <script src="js/html2canvas.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'"></script>
-    <script src="js/jspdf.umd.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'"></script>
-    <link rel="stylesheet" href="css/erp.css" />
-  </head>
-  <body>
-    <!-- APLIKASI UTAMA -->
-    <div id="app" class="app">
-      <!-- Top navigation horizontal -->
-      <header id="top" class="top"></header>
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width,initial-scale=1,viewport-fit=cover"
+        />
+        <meta name="theme-color" content="#1B4310" />
+        <title>Satarya ERP — Integrated Workspace</title>
+        <link rel="icon" type="image/png" href="img/logo.png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <script>
+            // Terapkan tema sebelum render agar tidak berkedip
+            (function () {
+                try {
+                    var t = localStorage.getItem("satarya_theme");
+                    if (!t) t = "light";
+                    document.documentElement.setAttribute("data-theme", t);
+                } catch (e) {}
+            })();
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+        <script
+            src="js/html2canvas.min.js"
+            onerror="
+                this.onerror = null;
+                this.src =
+                    'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';"
+        ></script>
+        <script
+            src="js/jspdf.umd.min.js"
+            onerror="
+                this.onerror = null;
+                this.src =
+                    'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';"
+        ></script>
+        <!-- Firebase App (Core) -->
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+        <!-- Firebase Authentication -->
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+        <link rel="stylesheet" href="css/erp.css" />
+    </head>
+    <body>
+        <!-- HALAMAN LOGIN (FIREBASE / PREVIEW) -->
+        <section id="login" class="login" hidden></section>
 
-      <!-- Konten halaman -->
-      <main id="main" class="main"></main>
+        <!-- APLIKASI UTAMA -->
+        <div id="app" class="app">
+            <!-- Top navigation horizontal -->
+            <header id="top" class="top"></header>
 
-      <!-- Bottom tab bar (mobile) -->
-      <nav id="tabbar" class="tabbar" aria-label="Navigasi cepat"></nav>
-    </div>
+            <!-- Konten halaman -->
+            <main id="main" class="main"></main>
 
-    <!-- Drawer menu mobile -->
-    <div id="drawer" class="drawer" aria-hidden="true"></div>
+            <!-- Bottom tab bar (mobile) -->
+            <nav id="tabbar" class="tabbar" aria-label="Navigasi cepat"></nav>
+        </div>
 
-    <!-- Command palette (Ctrl + K) -->
-    <div id="cmdk" class="cmdk" aria-hidden="true"></div>
+        <!-- Drawer menu mobile -->
+        <div id="drawer" class="drawer" aria-hidden="true"></div>
 
-    <!-- Form sheet -->
-    <dialog id="dlg" class="sheet"></dialog>
+        <!-- Command palette (Ctrl + K) -->
+        <div id="cmdk" class="cmdk" aria-hidden="true"></div>
 
-    <!-- Konfirmasi -->
-    <dialog id="cfm" class="confirm"></dialog>
+        <!-- Form sheet -->
+        <dialog id="dlg" class="sheet"></dialog>
 
-    <!-- Area cetak invoice -->
-    <div id="print" class="print-area"></div>
+        <!-- Konfirmasi -->
+        <dialog id="cfm" class="confirm"></dialog>
 
-    <!-- Notifikasi -->
-    <div id="toasts" class="toasts" aria-live="polite"></div>
+        <!-- Area cetak invoice -->
+        <div id="print" class="print-area"></div>
 
-    <script src="js/erp.js"></script>
-  </body>
+        <!-- Notifikasi -->
+        <div id="toasts" class="toasts" aria-live="polite"></div>
+
+        <!-- Logika Modular Satarya ERP -->
+        <script src="js/schema.js"></script>
+        <script src="js/state.js"></script>
+        <script src="js/auth.js"></script>
+        <script src="js/ui.js"></script>
+        <script src="js/pages.js"></script>
+        <script src="js/export.js"></script>
+        <script src="js/erp.js"></script>
+    </body>
 </html>

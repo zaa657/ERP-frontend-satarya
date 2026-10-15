@@ -25,9 +25,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <script src="js/html2canvas.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'"></script>
     <script src="js/jspdf.umd.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'"></script>
+    <!-- Firebase App (Core) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <!-- Firebase Authentication -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <link rel="stylesheet" href="css/erp.css?v={{ filemtime(public_path('css/erp.css')) }}" />
   </head>
   <body>
+    <!-- HALAMAN LOGIN (FIREBASE / PREVIEW) -->
+    <section id="login" class="login" hidden></section>
+
     <!-- APLIKASI UTAMA -->
     <div id="app" class="app">
       <!-- Top navigation horizontal -->
@@ -58,6 +65,16 @@
     <!-- Notifikasi -->
     <div id="toasts" class="toasts" aria-live="polite"></div>
 
+    <script>
+      // Role portal dari route Laravel (/owner atau /admin)
+      window.PORTAL_ROLE = @json($loginRole ?? null);
+    </script>
+    <script src="js/schema.js?v={{ filemtime(public_path('js/schema.js')) }}"></script>
+    <script src="js/state.js?v={{ filemtime(public_path('js/state.js')) }}"></script>
+    <script src="js/auth.js?v={{ filemtime(public_path('js/auth.js')) }}"></script>
+    <script src="js/ui.js?v={{ filemtime(public_path('js/ui.js')) }}"></script>
+    <script src="js/pages.js?v={{ filemtime(public_path('js/pages.js')) }}"></script>
+    <script src="js/export.js?v={{ filemtime(public_path('js/export.js')) }}"></script>
     <script src="js/erp.js?v={{ filemtime(public_path('js/erp.js')) }}"></script>
   </body>
 </html>
