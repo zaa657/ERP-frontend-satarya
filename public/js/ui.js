@@ -191,32 +191,30 @@ window.quickCalPreset = (preset, ev) => {
 
 
 function renderTop() {
+    const n = alerts().length;
+    const dark = document.documentElement.getAttribute("data-theme") === "dark";
     const navHtml = NAV.map((g) => {
         if (g.page) {
             if (!can(g.page)) return "";
-            return `<button class="${isOn(g.page) ? "on" : ""}" onclick="go('${g.page}')">${I(g.ico)}<span>${g.label}</span></button>`;
+            return `<div class="nav-item"><button class="nav-btn ${isOn(g.page) ? "on" : ""}" onclick="go('${g.page}')">${I(g.ico)}<span>${g.label}</span></button></div>`;
         }
         const items = groupItems(g);
         if (!items.length) return "";
-        const wide = g.wide ? " wide" : "";
         const active = items.some((i) => isOn(i[0]));
-        return `<div class="dd${wide}${active ? " on" : ""}" data-dd>
-        <button class="dd-btn" onclick="toggleDD(this.parentNode,event)" aria-haspopup="true" aria-expanded="false">${I(g.ico)}<span>${g.label}</span>${I("chev", "caret")}</button>
-        <div class="dd-menu">${items
+        return `<div class="nav-item" data-dd>
+      <button class="nav-btn ${active ? "on" : ""}" onclick="toggleDD(this.parentNode,event)" aria-haspopup="true">${I(g.ico)}<span>${g.label}</span>${I("chev", "caret")}</button>
+      <div class="mega ${g.wide && items.length > 3 ? "wide" : ""}">${items
           .map(
-            ([k, l, d, isNew]) =>
-              `<button class="dd-item${isOn(k) ? " on" : ""}" onclick="go('${k}')"><span class="dd-ico">${I(k)}</span><span class="dd-text"><b>${l}${isNew ? '<span class="mega-new">BARU</span>' : ""}</b>${d ? `<small>${d}</small>` : ""}</span></button>`,
+              ([k, l, d, isNew]) =>
+                  `<button class="mega-item ${isOn(k) ? "on" : ""}" onclick="go('${k}')"><span class="mega-ico">${I(k)}</span><span><span class="mega-t">${l}${isNew ? '<span class="mega-new">BARU</span>' : ""}</span><span class="mega-d">${d}</span></span></button>`,
           )
           .join("")}</div></div>`;
     }).join("");
 
-    const dark = document.documentElement.getAttribute("data-theme") === "dark";
-    const n = alerts().length;
-
     $("#top").innerHTML = `<div class="top-in">
     <button class="icon-btn burger" onclick="openDrawer()" aria-label="Buka menu">${I("menu")}</button>
     <button class="brand" onclick="go('dash')" aria-label="Beranda">
-      <span class="brand-logo"><img src="img/logo.png" alt="Satarya"></span>
+      <span class="brand-logo"><img src="/img/logo.png" alt="Satarya"></span>
       <span><span class="brand-name">SATARYA</span><span class="brand-sub">Sistem Operasional</span></span>
     </button>
     <nav class="nav" aria-label="Navigasi utama">${navHtml}</nav>

@@ -138,6 +138,8 @@
   visibility: hidden;
   transform: translateY(8px);
   transition: opacity 0.16s, transform 0.16s, visibility 0.16s;
+  z-index: 1000;
+  pointer-events: none;
 }
 .mega.wide {
   min-width: 560px;
@@ -147,6 +149,7 @@
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+  pointer-events: auto;
 }
 .mega-item {
   display: flex;
