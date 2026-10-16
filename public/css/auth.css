@@ -292,43 +292,63 @@
 }
 
 .nav-account-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
   height: 38px;
-  padding: 4px 6px 4px 5px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
+  padding: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.10);
   border: 1.5px solid rgba(255, 255, 255, 0.22);
   color: #fff;
   cursor: pointer;
   transition: all 0.18s ease;
 }
 
-.nav-account-btn:hover {
-  background: rgba(255, 255, 255, 0.22);
-  border-color: rgba(255, 255, 255, 0.4);
+.nav-account-btn:hover,
+.nav-account-wrap.open .nav-account-btn {
+  background: rgba(255, 255, 255, 0.20);
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: translateY(-1px);
 }
 
-.nav-account-avatar {
-  width: 28px;
-  height: 28px;
+.nav-account-btn svg {
+  width: 19px;
+  height: 19px;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.nav-account-btn.owner {
+  border-color: rgba(74, 222, 128, 0.5);
+  color: #bbf7d0;
+}
+
+.nav-account-btn.admin {
+  border-color: rgba(96, 165, 250, 0.5);
+  color: #bfdbfe;
+}
+
+/* Titik Indikator Role di Pojok Icon */
+.nav-account-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 800;
-  color: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  border: 1.5px solid #14330d;
 }
 
-.nav-account-avatar.owner {
-  background: linear-gradient(135deg, #15803d, #22c55e);
+.nav-account-dot.owner {
+  background: #22c55e;
+  box-shadow: 0 0 5px #22c55e;
 }
 
-.nav-account-avatar.admin {
-  background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+.nav-account-dot.admin {
+  background: #3b82f6;
+  box-shadow: 0 0 5px #3b82f6;
 }
 
 .nav-account-badge {
@@ -341,11 +361,23 @@
 }
 
 .nav-account-badge.owner {
+  background: rgba(34, 197, 94, 0.2);
+  color: #15803d;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+}
+
+[data-theme="dark"] .nav-account-badge.owner {
   background: rgba(34, 197, 94, 0.3);
   color: #86efac;
 }
 
 .nav-account-badge.admin {
+  background: rgba(59, 130, 246, 0.2);
+  color: #1d4ed8;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+}
+
+[data-theme="dark"] .nav-account-badge.admin {
   background: rgba(59, 130, 246, 0.3);
   color: #bfdbfe;
 }

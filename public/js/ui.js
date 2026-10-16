@@ -227,10 +227,9 @@ function renderTop() {
           currentAuthUser
               ? `
         <div class="nav-account-wrap" data-dd id="nav_account_wrap">
-          <button type="button" class="nav-account-btn" onclick="toggleDD(this.parentNode,event)" title="Profil Akun: ${esc(currentAuthUser.email)} (${currentAuthUser.role.toUpperCase()})" aria-label="Akun Saya" aria-haspopup="true">
-            <span class="nav-account-avatar ${currentAuthUser.role}">${currentAuthUser.role === "owner" ? "OW" : "AD"}</span>
-            <span class="nav-account-badge ${currentAuthUser.role}">${currentAuthUser.role.toUpperCase()}</span>
-            ${I("chev", "caret")}
+          <button type="button" class="icon-btn nav-account-btn ${currentAuthUser.role}" onclick="toggleDD(this.parentNode,event)" title="Akun: ${esc(currentAuthUser.displayName || currentAuthUser.email)} (${currentAuthUser.role.toUpperCase()})" aria-label="Profil Akun" aria-haspopup="true">
+            ${I("user")}
+            <span class="nav-account-dot ${currentAuthUser.role}"></span>
           </button>
           <div class="nav-account-dropdown">
             <div class="account-menu-header">
@@ -238,6 +237,7 @@ function renderTop() {
               <div class="account-menu-info">
                 <b>${esc(currentAuthUser.displayName || currentAuthUser.email.split("@")[0])}</b>
                 <span>${esc(currentAuthUser.email)}</span>
+                <span class="nav-account-badge ${currentAuthUser.role}" style="width:fit-content;margin-top:2px;">${currentAuthUser.role.toUpperCase()}</span>
               </div>
             </div>
             <div class="account-menu-divider"></div>
@@ -252,9 +252,8 @@ function renderTop() {
       `
               : `
         <div class="nav-account-wrap" data-dd id="nav_account_wrap">
-          <button type="button" class="nav-account-btn" onclick="showLogin()" title="Masuk Akun" aria-label="Masuk Akun">
-            <span class="nav-account-avatar" style="background:var(--lemon-600)">${I("user")}</span>
-            <span class="nav-account-badge" style="background:rgba(255,255,255,0.2);color:#fff">MASUK</span>
+          <button type="button" class="icon-btn nav-account-btn" onclick="showLogin()" title="Masuk Akun" aria-label="Masuk Akun">
+            ${I("user")}
           </button>
         </div>
       `
