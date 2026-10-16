@@ -87,27 +87,29 @@ const initApp = () => {
         console.warn("initFirebaseAuth error:", e);
     }
 
+    if (typeof ME !== "undefined" && currentAuthUser) {
+        ME.u = currentAuthUser.email || currentAuthUser.role;
+        ME.n = currentAuthUser.displayName || (currentAuthUser.role === "owner" ? "Owner Direktur" : "Admin Operasional");
+        ME.r = currentAuthUser.role;
+    }
+
     const path = window.location.pathname.toLowerCase();
     const isOwnerRoute = path.includes("/owner") || window.PORTAL_ROLE === "owner";
     const isAdminRoute = path.includes("/admin") || window.PORTAL_ROLE === "admin";
 
-    // Jika belum login, selalu arahkan ke login portal yang sesuai
-    if (!currentAuthUser) {
-        if (isAdminRoute) {
-            showLogin("admin");
-        } else {
-            showLogin("owner");
-        }
-        return;
-    }
-
-    // Jika sudah login, cek apakah pengguna berada di route spesifik yang berbeda role
-    if (isOwnerRoute && currentAuthUser.role !== "owner") {
+    // Jika mengunjungi /owner atau /admin secara eksplisit, tampilkan portal login masing-masing
+    if (isOwnerRoute) {
         showLogin("owner");
         return;
     }
-    if (isAdminRoute && currentAuthUser.role !== "admin") {
+    if (isAdminRoute) {
         showLogin("admin");
+        return;
+    }
+
+    // Jika di root (/) tapi belum login, arahkan ke portal login owner
+    if (!currentAuthUser) {
+        showLogin("owner");
         return;
     }
 

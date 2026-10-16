@@ -6,15 +6,17 @@
 
 const AUTH_SESSION_KEY = "satarya_auth_session";
 
-// Konfigurasi Firebase (opsional, jika kosong sistem berjalan dalam mode autentikasi lokal terproteksi)
-const FIREBASE_CONFIG = {
-    apiKey: "",
-    authDomain: "",
-    projectId: "",
-    storageBucket: "",
-    messagingSenderId: "",
-    appId: "",
+// Konfigurasi Firebase Project (satarya-erp)
+const firebaseConfig = {
+    apiKey: "AIzaSyAqChH4FtXpPmLXdnQOgnYniDGe1sVCU7w",
+    authDomain: "satarya-erp.firebaseapp.com",
+    projectId: "satarya-erp",
+    storageBucket: "satarya-erp.firebasestorage.app",
+    messagingSenderId: "977075153061",
+    appId: "1:977075153061:web:962f9dd515588ae5d1c54c",
+    measurementId: "G-EB0P0XL2D4",
 };
+const FIREBASE_CONFIG = firebaseConfig;
 
 let firebaseAuth = null;
 let currentAuthUser = null;
@@ -36,6 +38,11 @@ loadAuthSession();
 
 function saveAuthSession(userObj) {
     currentAuthUser = userObj;
+    if (typeof ME !== "undefined" && userObj) {
+        ME.u = userObj.email || userObj.role;
+        ME.n = userObj.displayName || (userObj.role === "owner" ? "Owner Direktur" : "Admin Operasional");
+        ME.r = userObj.role;
+    }
     try {
         localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(userObj));
     } catch (e) {}
@@ -51,25 +58,26 @@ function clearAuthSession() {
 // Inisialisasi Firebase Auth jika library dan konfigurasi tersedia
 function initFirebaseAuth() {
     try {
-        if (window.firebase && FIREBASE_CONFIG.apiKey && !FIREBASE_CONFIG.apiKey.startsWith("MASUKKAN")) {
+        if (
+            window.firebase &&
+            firebaseConfig.apiKey &&
+            !firebaseConfig.apiKey.startsWith("MASUKKAN")
+        ) {
             if (!firebase.apps.length) {
-                firebase.initializeApp(FIREBASE_CONFIG);
+                firebase.initializeApp(firebaseConfig);
             }
             if (!firebaseAuth) {
                 firebaseAuth = firebase.auth();
                 firebaseAuth.onAuthStateChanged((user) => {
-                    if (user) {
-                        const portal = getActivePortalRole();
-                        let role = portal;
-                        if (!role) {
-                            role = (user.email && user.email.toLowerCase().includes("owner")) || user.email === "direktur@satarya.com"
-                                ? "owner"
-                                : "admin";
-                        }
+                    if (user && currentAuthUser) {
+                        const role = currentAuthUser.role || getActivePortalRole();
                         saveAuthSession({
                             uid: user.uid,
                             email: user.email,
-                            displayName: user.displayName || (role === "owner" ? "Owner Direktur" : "Admin Operasional"),
+                            displayName:
+                                currentAuthUser.displayName ||
+                                user.displayName ||
+                                (role === "owner" ? "Owner Direktur" : "Admin Operasional"),
                             role: role,
                             photoURL: user.photoURL || null,
                         });
@@ -82,15 +90,15 @@ function initFirebaseAuth() {
     }
 }
 
-// Mendeteksi role portal aktif berdasarkan window.PORTAL_ROLE, pathname URL, atau sesi
+// Mendeteksi role portal aktif berdasarkan parameter, window.PORTAL_ROLE, pathname URL, atau sesi
 function getActivePortalRole(requestedRole) {
     if (requestedRole === "owner" || requestedRole === "admin") return requestedRole;
     if (window.PORTAL_ROLE === "owner" || window.PORTAL_ROLE === "admin") return window.PORTAL_ROLE;
-    
+
     const path = window.location.pathname.toLowerCase();
     if (path.includes("/owner")) return "owner";
     if (path.includes("/admin")) return "admin";
-    
+
     if (currentAuthUser && currentAuthUser.role) return currentAuthUser.role;
     return "owner"; // Default portal utama
 }
@@ -98,9 +106,9 @@ function getActivePortalRole(requestedRole) {
 // Menampilkan Halaman / Form Login
 window.showLogin = (roleOverride) => {
     try {
-        const appEl = $("#app");
+        const appEl = document.getElementById("app");
         if (appEl) appEl.hidden = true;
-        const loginEl = $("#login");
+        const loginEl = document.getElementById("login");
         if (!loginEl) return;
         loginEl.hidden = false;
         window.scrollTo(0, 0);
@@ -121,7 +129,7 @@ window.showLogin = (roleOverride) => {
         loginEl.innerHTML = `
       <div class="login-art">
         <div class="login-brand">
-          <span class="brand-logo"><img src="img/logo.png" alt="Satarya"></span>
+          <span class="brand-logo"><img src="/img/logo.png" alt="Satarya"></span>
           <div><b>SATARYA</b><span>Sistem Operasional ERP</span></div>
         </div>
         <div class="login-copy">
@@ -135,7 +143,7 @@ window.showLogin = (roleOverride) => {
       <div class="login-panel">
         <form class="login-card" id="loginForm" onsubmit="handleLoginSubmit(event, '${portalRole}')">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-            <div class="brand-logo" style="width:48px;height:48px"><img src="img/logo.png" alt="Satarya"></div>
+            <div class="brand-logo" style="width:48px;height:48px"><img src="/img/logo.png" alt="Satarya"></div>
             <span class="login-portal-badge ${portalBadgeClass}">${portalBadge}</span>
           </div>
 
@@ -147,7 +155,7 @@ window.showLogin = (roleOverride) => {
 
           <label class="field">
             <span>Email Pengguna</span>
-            <input type="email" id="loginEmail" name="email" required placeholder="mis. ${isOwner ? 'owner' : 'admin'}@satarya.com" value="" autocomplete="username">
+            <input type="email" id="loginEmail" name="email" required placeholder="mis. ${isOwner ? "owner" : "admin"}@satarya.com" value="" autocomplete="username">
           </label>
 
           <label class="field">
@@ -180,7 +188,7 @@ window.showLogin = (roleOverride) => {
           </button>
 
           <div style="margin-top:22px;text-align:center;font-size:13px;padding-top:16px;border-top:1px solid var(--line);">
-            <a href="${altPortalUrl}" onclick="event.preventDefault(); switchLoginPortal('${isOwner ? 'admin' : 'owner'}')" style="color:var(--text-2);text-decoration:none;font-weight:700;display:inline-flex;align-items:center;gap:6px;">
+            <a href="${altPortalUrl}" onclick="event.preventDefault(); switchLoginPortal('${isOwner ? "admin" : "owner"}')" style="color:var(--text-2);text-decoration:none;font-weight:700;display:inline-flex;align-items:center;gap:6px;">
               ${altPortalLabel}
             </a>
           </div>
@@ -202,10 +210,10 @@ window.switchLoginPortal = (targetRole) => {
 
 window.handleLoginSubmit = async (ev, forcedRole) => {
     if (ev) ev.preventDefault();
-    const emailEl = $("#loginEmail");
-    const passEl = $("#loginPass");
-    const errEl = $("#loginErr");
-    const btnSubmit = $("#btnSubmitLogin");
+    const emailEl = document.getElementById("loginEmail");
+    const passEl = document.getElementById("loginPass");
+    const errEl = document.getElementById("loginErr");
+    const btnSubmit = document.getElementById("btnSubmitLogin");
 
     if (errEl) {
         errEl.classList.remove("on");
@@ -223,24 +231,28 @@ window.handleLoginSubmit = async (ev, forcedRole) => {
         return;
     }
 
+    // Role strictly determined by portal context (/owner vs /admin)
+    const targetRole = forcedRole || getActivePortalRole();
+    const role = targetRole === "owner" ? "owner" : "admin";
+    const displayName = role === "owner" ? "Owner Direktur" : "Admin Operasional";
+
     if (btnSubmit) {
         btnSubmit.disabled = true;
         btnSubmit.innerHTML = `<span>Memverifikasi akun…</span>`;
     }
 
-    // Role strictly determined by portal context or credentials
-    const targetRole = forcedRole || getActivePortalRole();
-    const role = targetRole === "owner" ? "owner" : "admin";
-    const displayName = role === "owner" ? "Owner Direktur" : "Admin Operasional";
-
     const isFirebaseConfigured = Boolean(
         window.firebase &&
-        FIREBASE_CONFIG.apiKey &&
-        !FIREBASE_CONFIG.apiKey.startsWith("MASUKKAN")
+        firebaseConfig &&
+        firebaseConfig.apiKey &&
+        !firebaseConfig.apiKey.startsWith("MASUKKAN")
     );
 
     if (isFirebaseConfigured && window.firebase) {
         try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
             if (!firebaseAuth) firebaseAuth = firebase.auth();
             const cred = await firebaseAuth.signInWithEmailAndPassword(email, pass);
             const user = cred.user;
@@ -251,12 +263,12 @@ window.handleLoginSubmit = async (ev, forcedRole) => {
                 role: role,
                 photoURL: user.photoURL || null,
             });
-            toast(`Selamat datang kembali, ${currentAuthUser.displayName}!`, "s");
+            toast(`Selamat datang, ${currentAuthUser.displayName}!`, "s");
             enterApp();
         } catch (err) {
             if (btnSubmit) {
                 btnSubmit.disabled = false;
-                btnSubmit.innerHTML = `${I("lock")} <span>Masuk sebagai ${role === 'owner' ? 'Owner' : 'Admin'}</span>`;
+                btnSubmit.innerHTML = `${I("lock")} <span>Masuk sebagai ${role === "owner" ? "Owner" : "Admin"}</span>`;
             }
             let msg = "Gagal masuk: " + err.message;
             if (
@@ -264,7 +276,9 @@ window.handleLoginSubmit = async (ev, forcedRole) => {
                 err.code === "auth/wrong-password" ||
                 err.code === "auth/user-not-found"
             ) {
-                msg = "Email atau kata sandi yang Anda masukkan salah.";
+                msg = "Email atau kata sandi salah, atau akun belum terdaftar di Firebase Authentication.";
+            } else if (err.code === "auth/invalid-email") {
+                msg = "Format alamat email tidak valid.";
             } else if (err.code === "auth/too-many-requests") {
                 msg = "Terlalu banyak percobaan gagal. Silakan tunggu beberapa saat.";
             }
@@ -274,7 +288,6 @@ window.handleLoginSubmit = async (ev, forcedRole) => {
             }
         }
     } else {
-        // Mode Otentikasi Terverifikasi Sistem
         setTimeout(() => {
             saveAuthSession({
                 uid: "usr_" + Date.now(),
@@ -294,16 +307,20 @@ window.handleLoginSubmit = async (ev, forcedRole) => {
 
 window.handleGoogleLogin = async (portalRole) => {
     const role = (portalRole || getActivePortalRole()) === "owner" ? "owner" : "admin";
-    const defaultName = role === "owner" ? "Bpk. Satarya (Owner)" : "Staf Admin Operasional";
+    const defaultName = role === "owner" ? "Owner Direktur" : "Admin Operasional";
 
     const isFirebaseConfigured = Boolean(
         window.firebase &&
-        FIREBASE_CONFIG.apiKey &&
-        !FIREBASE_CONFIG.apiKey.startsWith("MASUKKAN")
+        firebaseConfig &&
+        firebaseConfig.apiKey &&
+        !firebaseConfig.apiKey.startsWith("MASUKKAN")
     );
 
     if (isFirebaseConfigured && window.firebase) {
         try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
             if (!firebaseAuth) firebaseAuth = firebase.auth();
             const provider = new firebase.auth.GoogleAuthProvider();
             const cred = await firebaseAuth.signInWithPopup(provider);
@@ -318,7 +335,7 @@ window.handleGoogleLogin = async (portalRole) => {
             toast(`Berhasil masuk dengan Google: ${user.email} (${role.toUpperCase()})`, "s");
             enterApp();
         } catch (err) {
-            toast(`Google Sign-In gagal: ${err.message}`, "e");
+            toast(`Google Sign-In gagal: ${err.message}`, "bad");
         }
     } else {
         saveAuthSession({
@@ -344,7 +361,6 @@ window.logoutUser = () => {
         clearAuthSession();
         toast("Anda telah keluar dari sistem.", "w");
 
-        // Arahkan kembali ke portal login sesuai role sebelumnya
         if (window.history && window.history.pushState) {
             window.history.pushState(null, "", "/" + lastRole);
         }
@@ -360,9 +376,18 @@ window.enterApp = () => {
         showLogin(portal);
         return;
     }
-    const loginEl = $("#login");
+    // Bersihkan URL kembali ke root dashboard setelah berhasil login dari /owner atau /admin
+    const path = window.location.pathname.toLowerCase();
+    if (path === "/owner" || path === "/admin") {
+        try {
+            window.history.replaceState(null, "", "/");
+        } catch (e) {}
+    }
+    window.PORTAL_ROLE = null;
+
+    const loginEl = document.getElementById("login");
     if (loginEl) loginEl.hidden = true;
-    const appEl = $("#app");
+    const appEl = document.getElementById("app");
     if (appEl) appEl.hidden = false;
     render();
 };
@@ -370,17 +395,22 @@ window.enterApp = () => {
 window.handleForgotPassword = async () => {
     const isFirebaseConfigured = Boolean(
         window.firebase &&
-        FIREBASE_CONFIG.apiKey &&
-        !FIREBASE_CONFIG.apiKey.startsWith("MASUKKAN")
+        firebaseConfig &&
+        firebaseConfig.apiKey &&
+        !firebaseConfig.apiKey.startsWith("MASUKKAN")
     );
+    const emailInput = document.getElementById("loginEmail");
     const email = prompt(
         "Masukkan email Anda untuk pengiriman tautan reset kata sandi:",
-        $("#loginEmail") ? $("#loginEmail").value : ""
+        emailInput ? emailInput.value : ""
     );
     if (!email) return;
 
     if (isFirebaseConfigured && window.firebase) {
         try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
             if (!firebaseAuth) firebaseAuth = firebase.auth();
             await firebaseAuth.sendPasswordResetEmail(email);
             alert("Tautan reset kata sandi telah dikirim ke email " + email + ". Silakan periksa inbox Anda.");
