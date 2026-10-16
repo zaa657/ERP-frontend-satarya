@@ -121,13 +121,11 @@ window.showLogin = (roleOverride) => {
         const portalRole = getActivePortalRole(roleOverride);
         const isOwner = portalRole === "owner";
 
-        const portalBadge = isOwner ? "👑 PORTAL OWNER (DIREKTUR)" : "🛡️ PORTAL ADMIN (OPERASIONAL)";
-        const portalBadgeClass = isOwner ? "owner" : "admin";
-        const portalTitle = isOwner ? "Masuk Portal Owner" : "Masuk Portal Admin";
+        const portalTitle = isOwner ? "Login Owner" : "Login Admin";
         const portalSubtitle = isOwner
             ? "Akses kontrol penuh seluruh sistem, verifikasi anggaran, dan laporan eksekutif."
             : "Akses operasional harian, pencatatan kas, stok, absensi, dan data lapangan.";
-        const submitBtnText = isOwner ? "Masuk sebagai Owner" : "Masuk sebagai Admin";
+        const submitBtnText = isOwner ? "Login Owner" : "Login Admin";
         const altPortalUrl = isOwner ? "/admin" : "/owner";
         const altPortalLabel = isOwner ? "Beralih ke Portal Admin →" : "Beralih ke Portal Owner →";
 
@@ -147,9 +145,8 @@ window.showLogin = (roleOverride) => {
 
       <div class="login-panel">
         <form class="login-card" id="loginForm" onsubmit="handleLoginSubmit(event, '${portalRole}')">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+          <div style="margin-bottom:18px;">
             <div class="brand-logo" style="width:48px;height:48px"><img src="/img/logo.png" alt="Satarya"></div>
-            <span class="login-portal-badge ${portalBadgeClass}">${portalBadge}</span>
           </div>
 
           <h1>${portalTitle}</h1>
@@ -273,7 +270,7 @@ window.handleLoginSubmit = async (ev, forcedRole) => {
         } catch (err) {
             if (btnSubmit) {
                 btnSubmit.disabled = false;
-                btnSubmit.innerHTML = `${I("lock")} <span>Masuk sebagai ${role === "owner" ? "Owner" : "Admin"}</span>`;
+                btnSubmit.innerHTML = `${I("lock")} <span>Login ${role === "owner" ? "Owner" : "Admin"}</span>`;
             }
             let msg = "Gagal masuk: " + err.message;
             if (
