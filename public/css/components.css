@@ -1125,8 +1125,14 @@ dialog::backdrop {
   width: 44px;
   height: 44px;
   border-radius: 14px;
-  background: var(--primary);
-  color: #fff;
+  background: linear-gradient(135deg, var(--leaf-800) 0%, var(--leaf-600) 100%);
+  color: var(--lemon-400);
+  box-shadow: 0 4px 12px rgba(27, 67, 16, 0.2);
+}
+[data-theme="dark"] .sheet-h .mega-ico {
+  background: linear-gradient(135deg, var(--leaf-700) 0%, var(--leaf-500) 100%);
+  color: var(--lemon-500);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 .sheet-h h3 {
   font-size: 18px;
@@ -1165,16 +1171,82 @@ dialog::backdrop {
 .fgrid label.full {
   grid-column: 1 / -1;
 }
+.fgrid label:focus-within > span {
+  color: var(--primary);
+  transition: color 0.15s ease;
+}
+.fgrid input:not([type="file"]),
+.fgrid select,
+.fgrid textarea {
+  width: 100%;
+  height: 46px;
+  padding: 0 14px;
+  border-radius: var(--r-sm);
+  border: 1.5px solid var(--line-2);
+  background: var(--surface);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+.fgrid input:not([type="file"]):hover,
+.fgrid select:hover,
+.fgrid textarea:hover {
+  border-color: var(--leaf-500);
+}
+.fgrid input:not([type="file"]):focus,
+.fgrid select:focus,
+.fgrid textarea:focus {
+  outline: 0;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 18%, transparent);
+  background: var(--surface);
+}
+.fgrid input::placeholder,
+.fgrid textarea::placeholder {
+  color: var(--muted);
+  opacity: 0.75;
+}
+.fgrid select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23225814' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 38px;
+}
+[data-theme="dark"] .fgrid select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234ade80' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+.fgrid textarea {
+  height: auto;
+  min-height: 90px;
+  padding: 12px 14px;
+  line-height: 1.55;
+  resize: vertical;
+}
 .fgrid input[type="file"] {
   height: auto;
-  padding: 10px;
-  border-style: dashed;
+  padding: 12px 14px;
+  border: 1.5px dashed var(--line-2);
+  border-radius: var(--r-sm);
   background: var(--surface-2);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.fgrid input[type="file"]:hover {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  color: var(--primary);
 }
 .fgrid .hint {
   font-size: 12px;
-  font-weight: 600;
-  color: var(--accent);
+  font-weight: 700;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 .ref {
   display: flex;
@@ -1187,14 +1259,46 @@ dialog::backdrop {
 .ref .btn {
   height: 46px;
   flex-shrink: 0;
+  border-radius: var(--r-sm);
+  background: var(--primary-soft);
+  color: var(--primary);
+  border: 1.5px solid var(--line-2);
+  font-weight: 700;
+  transition: all 0.15s ease;
+}
+.ref .btn:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
 }
 .sheet-f {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 10px;
   padding: 16px 22px;
   border-top: 1px solid var(--line);
   background: var(--surface-2);
+}
+.sheet-f .btn {
+  height: 44px;
+  padding: 0 18px;
+  font-weight: 700;
+  border-radius: var(--r-sm);
+}
+.sheet-f .btn-primary {
+  background: linear-gradient(135deg, var(--leaf-800) 0%, var(--leaf-600) 100%);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 14px rgba(27, 67, 16, 0.22);
+}
+.sheet-f .btn-primary:hover {
+  background: linear-gradient(135deg, var(--leaf-900) 0%, var(--leaf-700) 100%);
+  box-shadow: 0 6px 18px rgba(27, 67, 16, 0.32);
+}
+[data-theme="dark"] .sheet-f .btn-primary {
+  background: linear-gradient(135deg, #1b4310 0%, #3b8724 100%);
+  color: #fff;
 }
 .kcol-add-btn {
   display: flex;
