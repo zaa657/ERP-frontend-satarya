@@ -808,6 +808,15 @@ function renderBuktiKasHtml(id) {
 
             <div class="bkm-lbl">Uraian / Keterangan</div>
             <div class="bkm-val">: ${esc(r.ket || "-")}</div>
+
+            ${
+                r.lampiran
+                    ? `
+            <div class="bkm-lbl">Lampiran / Bukti</div>
+            <div class="bkm-val">: <b>${esc(r.lampiran_name || "File Bukti Terlampir")}</b></div>
+            `
+                    : ""
+            }
         </div>
 
         <div class="bkm-amount-box">
@@ -896,6 +905,13 @@ window.openBuktiKasModal = (id, autoFormat) => {
                 <button class="btn btn-ghost" id="btnBkmPrint" style="gap:6px">
                     ${I("print")} Cetak Bukti
                 </button>
+                ${
+                    r.lampiran
+                        ? `<a class="btn btn-soft" href="${esc(r.lampiran)}" download="${esc(r.lampiran_name || "Bukti_Transaksi")}" target="_blank" rel="noopener" style="gap:6px">
+                    ${I("download")} Lampiran (${esc(r.lampiran_name || "File")})
+                </a>`
+                        : ""
+                }
             </div>
         </div>
 

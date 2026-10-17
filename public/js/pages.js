@@ -785,10 +785,27 @@ function disp(f, v, plain, k, r) {
         return v
             ? `<a class="file-pill" href="${esc(v)}" target="_blank" rel="noopener">${I("link")} Buka Tautan</a>`
             : "-";
-    if (t === "pdf" || t === "pdf?" || f[0] === "pdf") {
+    if (
+        t === "pdf" ||
+        t === "pdf?" ||
+        t === "file" ||
+        t === "file?" ||
+        f[0] === "pdf" ||
+        f[0] === "lampiran"
+    ) {
+        const name =
+            (r && (r[f[0] + "_name"] || r.lampiran_name || r.pdf_name)) ||
+            (v ? "Lampiran" : "");
+        if (plain) return name || "-";
         if (!v) return '<span class="muted">-</span>';
-        const name = r.pdf_name || "Dokumen.pdf";
-        return `<a class="file-pill" href="${esc(v)}" download="${esc(name)}" target="_blank" rel="noopener">${I("file")} ${esc(name)}</a>`;
+        const ext = (name.split(".").pop() || "").toLowerCase();
+        let ico = "file";
+        if (ext === "pdf") ico = "filePdf";
+        else if (["jpg", "jpeg", "png", "webp", "gif"].includes(ext))
+            ico = "image";
+        else if (["xlsx", "xls", "csv", "ods"].includes(ext))
+            ico = "fileSpreadsheet";
+        return `<a class="file-pill" href="${esc(v)}" download="${esc(name)}" target="_blank" rel="noopener">${I(ico)} ${esc(name)}</a>`;
     }
     if (f[0] === "status" || f[0] === "tipe" || f[0] === "kondisi")
         return badge(v);
@@ -819,6 +836,8 @@ function listPage(k) {
                 kategori: x.kategori || "Kas Harian",
                 nominal: x.nominal,
                 ket: x.ket || "Dari Kas Harian",
+                lampiran: x.lampiran,
+                lampiran_name: x.lampiran_name,
                 _src: "keu",
             }));
         const directBiaya = (D.biaya || []).map((x) => ({
