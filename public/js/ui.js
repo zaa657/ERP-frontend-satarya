@@ -401,7 +401,13 @@ function fld(f, v, pre) {
         k === "link" ||
         k === "item" ||
         k === "uraian" ||
-        t === "txt";
+        k === "lampiran" ||
+        k === "pdf" ||
+        t === "txt" ||
+        t === "pdf" ||
+        t === "pdf?" ||
+        t === "file" ||
+        t === "file?";
 
     if (Array.isArray(t)) {
         i = `<select name="${k}">${t.map((o) => `<option ${o == val ? "selected" : ""}>${o}</option>`).join("")}</select>`;
@@ -417,15 +423,32 @@ function fld(f, v, pre) {
         </select>
         <button type="button" class="btn btn-sm" onclick="quickAddRef('${r}','sel_${k}')" title="Tambah ${esc(E[r].s)} baru secara langsung">+ ${esc(E[r].s)}</button>
       </div>`;
-    } else if (t === "pdf" || t === "pdf?") {
-        const isOpt = t === "pdf?";
+    } else if (t === "pdf" || t === "pdf?" || t === "file" || t === "file?") {
+        const isOpt = t.endsWith("?");
+        const isMulti = t === "file" || t === "file?";
         const hasExisting = Boolean(val);
-        const existingName = (pre && pre.pdf_name) || "Dokumen tersimpan.pdf";
+        const existingName =
+            (pre && (pre[k + "_name"] || pre.pdf_name || pre.lampiran_name)) ||
+            (isMulti ? "Lampiran tersimpan" : "Dokumen tersimpan.pdf");
+        const acceptTypes = isMulti
+            ? ".jpg,.jpeg,.png,.webp,.pdf,.xlsx,.xls,.csv,.ods,image/*,application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv"
+            : ".pdf,application/pdf";
+        const helpText = isMulti
+            ? `<small style="display:block;margin-top:6px;font-size:11.5px;color:var(--muted);font-weight:500;">Format yang didukung: <b>JPG / Gambar, PDF, atau Spreadsheet (Excel .xlsx, .xls, .csv)</b></small>`
+            : "";
         i = `
-      <input type="file" name="${k}_file" accept=".pdf,application/pdf" ${!isOpt && !hasExisting ? "required" : ""}>
-      ${hasExisting ? `<div class="hint">✓ ${esc(existingName)} (Pilih file baru jika ingin mengganti)</div>` : ""}
+      <input type="file" name="${k}_file" accept="${acceptTypes}" ${!isOpt && !hasExisting ? "required" : ""}>
+      ${helpText}
+      ${
+          hasExisting
+              ? `<div class="hint" style="margin-top:6px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                   <span>✓ ${esc(existingName)} (Pilih file baru jika ingin mengganti)</span>
+                   <button type="button" class="btn btn-xs btn-ghost" style="height:24px;padding:0 8px;font-size:11px;" onclick="const p=this.closest('label');if(p){p.querySelector('input[name=\\'${k}\\']').value='';p.querySelector('input[name=\\'${k}_name\\']').value='';const h=p.querySelector('.hint');if(h)h.remove();}">Hapus</button>
+                 </div>`
+              : ""
+      }
       <input type="hidden" name="${k}" value="${esc(val)}">
-      <input type="hidden" name="${k}_name" value="${esc((pre && pre.pdf_name) || "")}">
+      <input type="hidden" name="${k}_name" value="${esc((pre && (pre[k + "_name"] || pre.pdf_name || pre.lampiran_name)) || "")}">
     `;
     } else if (t === "txt") {
         i = `<textarea name="${k}" placeholder="Tuliskan ${l.toLowerCase()}...">${esc(val)}</textarea>`;
@@ -649,19 +672,50 @@ window.openForm = (k, id, pre) => {
         const o = r || { id: Date.now() };
         const fd = new FormData(ev.target);
 
-        // Baca input file PDF sebagai base64
-        const pdfFields = e.f.filter((f) => f[2] === "pdf" || f[2] === "pdf?");
-        for (const [fn] of pdfFields) {
+        // Baca input file (PDF, Gambar JPG/PNG, Spreadsheet XLSX/CSV) sebagai base64
+        const fileFields = e.f.filter((f) =>
+            ["pdf", "pdf?", "file", "file?"].includes(f[2]),
+        );
+        for (const [fn, , ft] of fileFields) {
             const fileInput = formEl.querySelector(`input[name="${fn}_file"]`);
             const file = fileInput && fileInput.files && fileInput.files[0];
             if (file) {
-                if (
-                    file.type &&
-                    file.type !== "application/pdf" &&
-                    !file.name.toLowerCase().endsWith(".pdf")
-                ) {
-                    alert("Harap pilih file PDF.");
-                    return;
+                const fname = file.name.toLowerCase();
+                const isPdfOnly = ft === "pdf" || ft === "pdf?";
+                if (isPdfOnly) {
+                    if (
+                        file.type &&
+                        file.type !== "application/pdf" &&
+                        !fname.endsWith(".pdf")
+                    ) {
+                        alert("Harap pilih file PDF.");
+                        return;
+                    }
+                } else {
+                    const validExts = [
+                        ".jpg",
+                        ".jpeg",
+                        ".png",
+                        ".webp",
+                        ".pdf",
+                        ".xlsx",
+                        ".xls",
+                        ".csv",
+                        ".ods",
+                    ];
+                    const isValid =
+                        validExts.some((ext) => fname.endsWith(ext)) ||
+                        file.type.startsWith("image/") ||
+                        file.type === "application/pdf" ||
+                        file.type.includes("spreadsheet") ||
+                        file.type.includes("excel") ||
+                        file.type === "text/csv";
+                    if (!isValid) {
+                        alert(
+                            "Harap pilih file dengan format JPG/Gambar, PDF, atau Spreadsheet (Excel .xlsx, .xls, .csv).",
+                        );
+                        return;
+                    }
                 }
                 const b64 = await new Promise((resolve, reject) => {
                     const reader = new FileReader();
@@ -671,7 +725,7 @@ window.openForm = (k, id, pre) => {
                 });
                 o[fn] = b64;
                 o[fn + "_name"] = file.name;
-            } else if (!r && !o[fn]) {
+            } else if (fd.get(fn) != null) {
                 o[fn] = fd.get(fn) || "";
                 o[fn + "_name"] = fd.get(fn + "_name") || "";
             }
@@ -681,7 +735,7 @@ window.openForm = (k, id, pre) => {
             if (
                 !n.endsWith("_file") &&
                 !n.endsWith("_name") &&
-                !pdfFields.some((pf) => pf[0] === n)
+                !fileFields.some((pf) => pf[0] === n)
             ) {
                 o[n] = v;
             }

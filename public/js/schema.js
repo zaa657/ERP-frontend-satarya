@@ -346,6 +346,7 @@ const E = {
                 ],
             ],
             ["nominal", "Nominal", "n"],
+            ["lampiran", "Bukti / Lampiran (JPG, PDF, Spreadsheet)", "file?"],
             ["ket", "Keterangan / Nama Tukang / Rincian"],
         ],
     },
@@ -440,6 +441,8 @@ const ICONS = {
     file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>',
     filePdf:
         '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M10 12H8v6h2a1.5 1.5 0 0 0 1.5-1.5v-3A1.5 1.5 0 0 0 10 12z"/>',
+    fileSpreadsheet:
+        '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8M12 13v8"/>',
     image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/>',
     link: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
     bolt: '<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>',
