@@ -244,6 +244,9 @@ function renderTop() {
             <button type="button" class="account-menu-item" onclick="go('log')">
               ${I("clock")} <span>Log Aktivitas</span>
             </button>
+            <button type="button" class="account-menu-item" onclick="openWaConfigModal()">
+              ${I("alert")} <span>Integrasi WA (n8n & Fonnte)</span>
+            </button>
             <button type="button" class="account-menu-item logout" onclick="logoutUser()">
               ${I("logout")} <span>Keluar / Ganti Akun</span>
             </button>
@@ -741,6 +744,13 @@ window.openForm = (k, id, pre) => {
         d.close();
         render(true);
         toast(r ? "Perubahan disimpan" : `${e.s} berhasil ditambahkan`);
+        if (k !== "invoice" && typeof window.notifyOwnerViaN8n === "function") {
+            window.notifyOwnerViaN8n(
+                r ? "Pembaruan Data" : "Penambahan Data Baru",
+                k,
+                o,
+            );
+        }
     };
 };
 
@@ -799,6 +809,9 @@ window.quickAddRef = (targetKey, selectElementId) => {
         sel.dispatchEvent(new Event("change"));
     }
     toast(`${e.s} "${newItem.nama}" ditambahkan!`);
+    if (typeof window.notifyOwnerViaN8n === "function") {
+        window.notifyOwnerViaN8n("Tambah Cepat", targetKey, newItem);
+    }
 };
 
 window.del = async (k, id) => {

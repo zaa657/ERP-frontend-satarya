@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta name="theme-color" content="#1B4310" />
     <title>Satarya ERP — Integrated Workspace</title>
     <link rel="icon" type="image/png" href="img/logo.png" />
@@ -72,6 +73,7 @@
     <script src="js/schema.js?v={{ filemtime(public_path('js/schema.js')) }}"></script>
     <script src="js/state.js?v={{ filemtime(public_path('js/state.js')) }}"></script>
     <script src="js/auth.js?v={{ filemtime(public_path('js/auth.js')) }}"></script>
+    <script src="js/n8n.js?v={{ filemtime(public_path('js/n8n.js')) }}"></script>
     <script src="js/ui.js?v={{ filemtime(public_path('js/ui.js')) }}"></script>
     <script src="js/pages.js?v={{ filemtime(public_path('js/pages.js')) }}"></script>
     <script src="js/export.js?v={{ filemtime(public_path('js/export.js')) }}"></script>

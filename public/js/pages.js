@@ -335,6 +335,13 @@ window.moveProj = (id, newStatus) => {
     save();
     render(true);
     toast(`Status proyek "${p.nama}" diubah ke ${newStatus}`);
+    if (typeof window.notifyOwnerViaN8n === "function") {
+        window.notifyOwnerViaN8n(
+            `Ubah Status (${old} → ${newStatus})`,
+            "proj",
+            p,
+        );
+    }
 };
 
 /* ---------------------------------------------------------------------

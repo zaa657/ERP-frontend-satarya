@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    'n8n' => [
+        'webhook_url' => env('N8N_WEBHOOK_URL', 'https://satarya-erp.app.n8n.cloud/webhook/2e639377-58a6-438d-9c4c-98ee82a6a47f'),
+    ],
+
+    'fonnte' => [
+        'token' => env('FONNTE_TOKEN', 'KWQnYkfe2adikDbgw7sH'),
+        'target' => env('FONNTE_TARGET', '62882008084730'),
+    ],
+
 ];
