@@ -52,11 +52,13 @@
   text-align: center;
 }
 .inv-logo-img {
-  width: 98px;
+  width: 130px;
+  max-width: 100%;
   height: auto;
   object-fit: contain;
   display: block;
-  margin: 0 auto 6px;
+  margin: 0 auto 8px;
+  border-radius: 6px;
 }
 .inv-comp-name {
   font-size: 14.5px;
@@ -363,7 +365,8 @@
 .doc-kop-logo {
   width: 52px;
   height: 52px;
-  object-fit: contain;
+  object-fit: cover;
+  border-radius: 8px;
 }
 .doc-kop-title {
   font-size: 20px;

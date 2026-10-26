@@ -779,7 +779,7 @@ function renderBuktiKasHtml(id) {
     <div id="buktiKasContent" class="bkm-voucher">
         <div class="bkm-head">
             <div style="display:flex;align-items:center;gap:12px">
-                <img src="img/logo.png" alt="Satarya" style="width:44px;height:44px;object-fit:contain">
+                <img src="img/logo.png" alt="Satarya" style="width:44px;height:44px;object-fit:cover;border-radius:8px">
                 <div>
                     <div style="font-size:18px;font-weight:900;color:#1b4310;line-height:1.1">SATARYA ERP</div>
                     <div style="font-size:11px;color:#64748b;font-weight:600">Kontraktor & Manajemen Konstruksi</div>
